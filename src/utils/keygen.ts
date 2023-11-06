@@ -1,5 +1,28 @@
 import { mnemonicToAccount } from "viem/accounts";
 
+import { Buffer } from "buffer"; 
+
+import * as ed from '@noble/ed25519';
+import { sha512 } from '@noble/hashes/sha512'
+ed.etc.sha512Sync = (...m) => sha512(ed.etc.concatBytes(...m))
+
+
+export const to_hex = (bytes: Uint8Array) => {
+  return '0x' + Buffer.from(bytes).toString('hex');
+};
+
+export const from_hex = (hex: string) => {
+  return Uint8Array.from(Buffer.from(hex.slice(2), 'hex'));
+};
+
+export const generate_private_key = () => {
+  return to_hex(ed.utils.randomPrivateKey());
+};
+
+export const get_public_key = (priv_key: string) => {
+  return to_hex(ed.getPublicKey(from_hex(priv_key)));
+};
+
 
 export const generate_signature = async function (public_key: string) {
     // DO NOT CHANGE ANY VALUES IN THIS CONSTANT

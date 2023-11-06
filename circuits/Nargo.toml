@@ -1,0 +1,8 @@
+[package]
+name = "main"
+type = "bin"
+authors = ["Sergey Potekhin"]
+compiler_version = "0.11.0"
+
+[dependencies]
+noir_bigint_curves = { tag = "v0.1.0", git = "https://github.com/shuklaayush/noir-bigint", directory="crates/curves" }

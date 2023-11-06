@@ -2,6 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 
+import { Provider } from 'react-redux';
+import store from './redux/store';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -15,7 +18,7 @@ import { styleReset } from 'react95';
 /* Original Windows95 font (optional) */
 import ms_sans_serif from 'react95/dist/fonts/ms_sans_serif.woff2';
 import ms_sans_serif_bold from 'react95/dist/fonts/ms_sans_serif_bold.woff2';
-import { 
+import {
   BrowserRouter as Router,
 } from 'react-router-dom';
 
@@ -45,6 +48,7 @@ const Wrapper = styled.div`
   height: 100%;
 `;
 
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
   <>
@@ -52,7 +56,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={original}>
       <Wrapper>
         <Router>
-          <App />
+          <Provider store={store}>
+            <App />
+          </Provider>
         </Router>
       </Wrapper>
     </ThemeProvider>

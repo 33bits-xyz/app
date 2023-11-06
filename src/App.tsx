@@ -9,11 +9,14 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import { Tab, TabBody, Tabs, Window, WindowContent, WindowHeader } from 'react95';
+import { Button, Tab, TabBody, Tabs, Window, WindowContent, WindowHeader } from 'react95';
 
-import Cast from './pages/Cast';
+import { useAccount, useConnect, useDisconnect } from 'wagmi'
+
+import Main from './pages/Main';
 import FAQ from './pages/FAQ';
 import About from './pages/About';
+import Settings from './pages/Settings';
 
 
 export default function App() {
@@ -32,15 +35,17 @@ export default function App() {
             <WindowContent>
               <Tabs value={location.pathname.replace('/', '')} onChange={(page) => navigate(page)}>
                 <Tab value={''}>Cast</Tab>
+                <Tab value={'settings'}>Settings</Tab>
                 <Tab value={'faq'}>FAQ</Tab>
                 <Tab value={'about'}>About</Tab>
               </Tabs>
 
               <TabBody>
                 <Routes>
-                  <Route path='/' element={ <Cast /> }></Route>
+                  <Route path='/' element={ <Main /> }></Route>
                   <Route path='/faq' element={ <FAQ /> }></Route>
                   <Route path='/about' element={ <About /> }></Route>
+                  <Route path='/settings' element={ <Settings /> }></Route>
                 </Routes>
               </TabBody>
             </WindowContent>
