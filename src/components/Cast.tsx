@@ -40,21 +40,16 @@ export default function Cast({
     console.log(trieProof.toTomlString('storage_proof'));
 
     const input = {
-      // fid: 10,
-      // public_key_preimage: Array.from(public_key_preimage),
-      // public_key: Array.from(public_key),
       storage_proof: {
         key: Array.from(trieProof.key),
         proof: Array.from(trieProof.proof),
         depth: trieProof.depth,
         value: Array.from(trieProof.value)
       },
-      // storage_root: uint8ArrayToHexArray(Uint8Array.from(Buffer.from(storageRoot)))
       storage_root: Array.from(storageRoot)
     };
 
     console.log('generating proof');
-    // Sign message with private key
     const proof = await noir.generateFinalProof(input);
 
     console.log('proof generated');
