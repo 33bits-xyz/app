@@ -1,70 +1,24 @@
 use dep::std;
-use dep::noir_bigint_curves::ed25519::Ed25519;
-use dep::noir_bigint_curves::ed25519::tecurve::Curve;
-use dep::noir_bigint_curves::ed25519::tecurve::Point;
-use dep::noir_bigint_curves::ed25519::fp::PrimeField as Fp;
-use dep::noir_bigint_curves::ed25519::fq::PrimeField as Fq;
+use dep::noir_trie_proofs::StorageProof;
 
+global DEPTH8_MAX: Field = 4256;
 
-fn ed25519() -> Ed25519 {
-    Ed25519 {
-        curve: Curve::new(
-            Fp::from_bytes(
-                [
-                    0xec, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
-                    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
-                    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
-                    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f
-                ]
-            ),
-            Fp::from_bytes(
-                [
-                    0xa3, 0x78, 0x59, 0x13, 0xca, 0x4d, 0xeb, 0x75, 
-                    0xab, 0xd8, 0x41, 0x41, 0x4d, 0x0a, 0x70, 0x00, 
-                    0x98, 0xe8, 0x79, 0x77, 0x79, 0x40, 0xc7, 0x8c, 
-                    0x73, 0xfe, 0x6f, 0x2b, 0xee, 0x6c, 0x03, 0x52
-                ]
-            ),
-            Point::from_affine( 
-                Fp::from_bytes(
-                    [
-                        0x1a, 0xd5, 0x25, 0x8f, 0x60, 0x2d, 0x56, 0xc9, 
-                        0xb2, 0xa7, 0x25, 0x95, 0x60, 0xc7, 0x2c, 0x69, 
-                        0x5c, 0xdc, 0xd6, 0xfd, 0x31, 0xe2, 0xa4, 0xc0, 
-                        0xfe, 0x53, 0x6e, 0xcd, 0xd3, 0x36, 0x69, 0x21
-                    ]
-                ),
-                Fp::from_bytes(
-                    [
-                        0x58, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 
-                        0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 
-                        0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 
-                        0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66
-                    ]
-                ),
-            ),
-        ),
-        cofactor: Fq::from_u56(8)
-    }
-}
-
-
-// This circuit verifies a following statement:
+// Circuit verifies a following statement:
 // - Farcster ID (`fid`) is less than 10_000
 // - Corresponding public key is presented in KeyRegistry storage under `fid` key
+// - TODO: Verify storage key is correct
 fn main(
-  fid: u32,
-  private_key: u56
+  // fid: u32,
+  // public_key_preimage: [u8; 32],
+  // public_key: [u8; 32],
+  storage_root: pub [u8; 32],
+  storage_proof: StorageProof<DEPTH8_MAX>
 ) {
-  assert(fid <= 10000);
+  // assert(fid <= 10000);
 
-  let Ed25519 { curve, cofactor: _cofactor } = ed25519();
-  let expected_public_key = curve.mul(Fq::from_u56(private_key), curve.gen);
+  // let expected_public_key = std::hash::sha256(public_key_preimage);
 
-  let (public_key_x_fp, public_key_y_fp) = expected_public_key.to_affine();
-
-  std::println("public key x");
-  std::println(public_key_x_fp.to_bytes());
-  std::println("public key y");
-  std::println(public_key_y_fp.to_bytes());
+  // assert(expected_public_key == public_key);
+  assert(storage_proof.verify_storage_root(storage_root));
+  // assert(storage_proof.value == public_key);
 }

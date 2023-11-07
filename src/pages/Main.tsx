@@ -38,15 +38,15 @@ export default function Main() {
     setupSignedKeyResponse(); 
   }, [privateKey]);
 
-  if (privateKey === null || signedKeyResponse === null) {
-    return <Loader/>;
-  }
+  // if (privateKey === null || signedKeyResponse === null) {
+  //   return <Loader/>;
+  // }
 
-  if (userFid === null) {
-    return <ConnectWarpcaster signedKeyResponse={signedKeyResponse} />
-  }
+  // if (userFid === null) {
+  //   return <ConnectWarpcaster signedKeyResponse={signedKeyResponse} />
+  // }
 
   return (
-    <Publish privateKey={privateKey} userFid={userFid} />
+    <Publish userFid={123} />
   );
 }

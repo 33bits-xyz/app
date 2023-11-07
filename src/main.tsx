@@ -7,6 +7,7 @@ import store from './redux/store';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import '@react95/icons/icons.css';
 
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import styled from 'styled-components';
