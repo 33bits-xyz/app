@@ -41,6 +41,11 @@ export default defineConfig(({ command }) => {
 
   return {
     plugins: basePlugins,
+    resolve: {
+      alias: {
+        buffer: 'buffer',
+      },
+    },
     // ... you can spread other shared or environment-specific configurations here
   };
 });

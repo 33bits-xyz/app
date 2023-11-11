@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Button, TextInput } from "react95";
+import { Anchor, Button, Hourglass, ProgressBar, TextInput } from "react95";
 import { get_public_key } from "../utils/keygen";
-import { sha256 } from '@noble/hashes/sha256';
 import { Buffer } from "buffer"; 
 
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
@@ -9,56 +8,107 @@ import { Noir } from '@noir-lang/noir_js';
 
 import circuit from './../../circuits/target/main.json';
 
-import { etc } from "@noble/ed25519";
-import { ethers } from "ethers";
-import { fetchStorageProof, uint8ArrayToHexArray } from "../utils/storageProof";
+import axios from "axios";
+import { stringToHexArray } from "../utils/string";
+
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+
+function stringToPaddedByteArray(input: string): Uint8Array {
+  // Convert the string to an array of bytes
+  const encoder = new TextEncoder();
+  const byteArray = encoder.encode(input);
+
+  // Create a new Uint8Array of size 256
+  const paddedArray = new Uint8Array(256);
+
+  // Copy the original bytes into the new array
+  paddedArray.set(byteArray);
+
+  // Return the padded array
+  return paddedArray;
+}
 
 
 export default function Cast({
-  userFid
+  userFid,
+  privateKey
 }: {
-  userFid: number
+  userFid: number,
+  privateKey: string
 }) {
   const [message, setMessage] = useState<string>("Test cast");
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingMessage, setLoadingMessage] = useState<string>("");
+  const [response, setResponse] = useState<boolean | null>(null);
 
-  const provider = new ethers.providers.JsonRpcProvider(import.meta.env.VITE_RPC);
-  const blockNumber = ethers.BigNumber.from('14194126');
-  const storageKey = '0xbbc70db1b6c7afd11e79c0fb0051300458f1a3acb8ee9789d9b6b26c61ad9bc7'; // Replace with actual storage key
-  const accountAddress = '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb'; // Replace with actual account address
-  const maxDepth = 8; // Specify your maximum depth
-  
   const cast = async () => {
+    setLoadingMessage('Fetching Farcaster tree...');
+
     // @ts-ignore
     const backend = new BarretenbergBackend(circuit);
     // @ts-ignore
     const noir = new Noir(circuit, backend);
 
-    const [storageRoot, trieProof] = await fetchStorageProof(provider, blockNumber, accountAddress, storageKey, maxDepth);
+    const publicKey = await get_public_key(privateKey);
 
-    console.log(`storage_root=[${uint8ArrayToHexArray(Uint8Array.from(Buffer.from(storageRoot)))}]`);
-    console.log(trieProof.toTomlString('storage_proof'));
+    console.log('casting');
+    console.log('private key');
+    console.log(privateKey);
+    console.log('public key');
+    console.log(publicKey);
+
+    const {
+      data: tree
+    } = await axios('https://33bits.xyz/api');
+
+    // Search for public key in members
+    // TODO: not found yet
+    const nodeIndex = tree.members.findIndex((x: any) => x.element.key === publicKey);
+
+    const node = tree.members[nodeIndex];
+
+    const messageBytes = Array.from(stringToPaddedByteArray(message));
+
+    console.log('message bytes');
+    console.log(messageBytes);
 
     const input = {
-      storage_proof: {
-        key: Array.from(trieProof.key),
-        proof: Array.from(trieProof.proof),
-        depth: trieProof.depth,
-        value: Array.from(trieProof.value)
-      },
-      storage_root: Array.from(storageRoot)
+      fid: userFid,
+      public_key_preimage: privateKey,
+      public_key: publicKey,
+      note_root: tree.root,
+      index: nodeIndex,
+      note_hash_path: node.path,
+      timestamp: Math.floor(Date.now() / 1000),
+      message: stringToHexArray(message),
     };
 
-    console.log('generating proof');
-    const proof = await noir.generateFinalProof(input);
+    console.log('input');
+    console.log(input);
 
-    console.log('proof generated');
+    console.log('generating proof');
+
+    setLoadingMessage('Generating proof...');
+
+    const proof = await noir.generateFinalProof(input);
     console.log(proof);
+
+    setLoadingMessage('Verifying proof...');
+
+    console.log('verifying proof');
+    const verification = await noir.verifyFinalProof(proof);
+
+    if (!verification) {
+      throw new Error('Proof verification failed');
+    }
   };
 
   return (
     <>
-      <p>Hello, {userFid}</p>
+      {/* <p>Hello, {userFid}</p> */}
 
       <TextInput
         multiline
@@ -71,20 +121,60 @@ export default function Cast({
       />
 
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
-        <Button
-          disabled={loading}
-          onClick={() => {
-            setLoading(true);
-
-            cast()
-              .finally(() => {
-                setLoading(false);
-              })
-          }}
-          primary
-          size="lg"
-        >✨ Cast ✨</Button>
+        {
+          loading === false && (
+            <Button
+              disabled={loading || message.length === 0}
+              onClick={() => {
+                setLoading(true);
+                setResponse(null);
+    
+                cast()
+                  .then(() => {
+                    setResponse(true);
+                    setMessage("");
+                  })
+                  .catch((e) => {
+                    console.log('error');
+                    console.log(e);
+                    setResponse(false);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  })
+              }}
+              primary
+              size="lg"
+            >✨ Cast ✨</Button>
+          )
+        }
       </div>
+
+      {
+          loading === true && (
+            <>
+              <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
+                <Hourglass size={32} style={{ margin: 10 }} />
+
+                <p>{ loadingMessage }</p>
+              </div>
+            </>
+          )
+        }
+
+        {
+          response === true &&
+          (
+            <p>Successfully published! Your message will appear in <Anchor href="https://warpcast.com/33bits">@33bits</Anchor> soon.</p>
+          )
+        }
+
+        {
+          response === false &&
+          (
+            <p>Something went wrong. Please, try again later or contact our support</p>
+          )
+        }
     </>
   );
 }

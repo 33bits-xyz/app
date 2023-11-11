@@ -1,5 +1,4 @@
 import { mnemonicToAccount } from "viem/accounts";
-
 import { Buffer } from "buffer"; 
 
 import * as ed from '@noble/ed25519';
@@ -16,11 +15,27 @@ export const from_hex = (hex: string) => {
 };
 
 export const generate_private_key = () => {
-  return to_hex(ed.utils.randomPrivateKey());
+  // Generate 30 random bytes
+  const randomBuffer = window.crypto.getRandomValues(new Uint8Array(30));
+
+  // Convert to hex string
+  let hexString = Array.from(randomBuffer, byte => byte.toString(16).padStart(2, '0')).join('');
+
+  // Pad with zeros to make the length 64 characters (32 bytes)
+  hexString = hexString.padStart(64, '0');
+
+  return `0x${hexString}`;
 };
 
-export const get_public_key = (priv_key: string) => {
-  return to_hex(ed.getPublicKey(from_hex(priv_key)));
+export const get_public_key = async (private_key: string) => {
+  // @ts-ignore -- no types
+  const circomlibjs = await import('circomlibjs');
+  const mimc = await circomlibjs.buildMimc7();
+  
+  const hash = mimc.multiHash([private_key]);
+  const hex = mimc.F.toString(hash, 16);
+
+  return `0x${hex}`;
 };
 
 

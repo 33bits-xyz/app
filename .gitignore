@@ -28,3 +28,5 @@ dist-ssr
 
 circuits/crs/
 circuits/proofs/
+circuits/Prover.toml
+circuits/Verifier.toml

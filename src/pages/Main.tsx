@@ -9,7 +9,7 @@ import { generate_private_key, generate_signature, get_public_key } from "../uti
 import { generate_signed_key_request } from "../utils/warpcast";
 
 import ConnectWarpcaster from "../components/ConnectWarpcaster";
-import Publish from "../components/Cast";
+import Cast from "../components/Cast";
 
 
 export default function Main() {
@@ -26,7 +26,13 @@ export default function Main() {
     if (signedKeyResponse !== null || privateKey === null) return;
 
     const setupSignedKeyResponse = async () => {
-      const publicKey = get_public_key(privateKey);
+      const publicKey = await get_public_key(privateKey);
+
+      console.log('preparing signed response');
+      console.log('private key');
+      console.log(privateKey);
+      console.log('public key');
+      console.log(publicKey);
 
       const { signature, deadline } = await generate_signature(publicKey);
 
@@ -38,15 +44,15 @@ export default function Main() {
     setupSignedKeyResponse(); 
   }, [privateKey]);
 
-  // if (privateKey === null || signedKeyResponse === null) {
-  //   return <Loader/>;
-  // }
+  if (privateKey === null || signedKeyResponse === null) {
+    return <Loader/>;
+  }
 
-  // if (userFid === null) {
-  //   return <ConnectWarpcaster signedKeyResponse={signedKeyResponse} />
-  // }
+  if (userFid === null) {
+    return <ConnectWarpcaster signedKeyResponse={signedKeyResponse} />
+  }
 
   return (
-    <Publish userFid={123} />
+    <Cast privateKey={privateKey} userFid={userFid} />
   );
 }

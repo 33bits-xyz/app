@@ -5,4 +5,3 @@ authors = ["Sergey Potekhin"]
 compiler_version = "0.17.0"
 
 [dependencies]
-noir_trie_proofs = { git = "https://github.com/aragonzkresearch/noir-trie-proofs", tag = "main", directory = "lib" }
