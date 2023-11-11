@@ -9,7 +9,10 @@ import Col from 'react-bootstrap/Col';
 export default function Settings() {
   return (
     <>
-      <Button fullWidth>Reset ⚠️</Button>
+      <Button fullWidth onClick={() => {
+        localStorage.clear();
+        window.location.reload();
+      }}>Reset ⚠️</Button>
     </>
   );
 }
