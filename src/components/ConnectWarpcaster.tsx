@@ -37,7 +37,9 @@ export default function ConnectWarpcaster({
         Sign in with Warpcaster to start. 
       </p>
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
-        <QRCodeSVG value={signedKeyResponse.deeplinkUrl} />
+        <a href={signedKeyResponse.deeplinkUrl} style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', KhtmlUserSelect: 'none', MozUserSelect: 'none', MsUserSelect: 'none', userSelect: 'none' }}>
+          <QRCodeSVG value={signedKeyResponse.deeplinkUrl} />
+        </a>
       </div>
 
       <p>
