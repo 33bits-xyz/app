@@ -1,5 +1,7 @@
-import QRCode from "qrcode.react";
 import React, { useEffect } from "react";
+
+
+import QRCodeSVG from "qrcode.react";
 import { Anchor } from "react95";
 import { poll_signed_key_request } from "../utils/warpcast";
 import { setUserFid } from "../redux/authSlice";
@@ -35,7 +37,7 @@ export default function ConnectWarpcaster({
         Sign in with Warpcaster to start. 
       </p>
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
-        <QRCode value={signedKeyResponse.deeplinkUrl} />
+        <QRCodeSVG value={signedKeyResponse.deeplinkUrl} />
       </div>
 
       <p>
