@@ -35,7 +35,7 @@ export const get_public_key = async (private_key: string) => {
   const hash = mimc.multiHash([private_key]);
   const hex = mimc.F.toString(hash, 16);
 
-  return `0x${hex}`;
+  return `0x${hex.padStart(64, '0')}`;
 };
 
 
