@@ -11,8 +11,6 @@ import Col from 'react-bootstrap/Col';
 
 import { Button, Tab, TabBody, Tabs, Window, WindowContent, WindowHeader } from 'react95';
 
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
-
 import Main from './pages/Main';
 import FAQ from './pages/FAQ';
 import About from './pages/About';
