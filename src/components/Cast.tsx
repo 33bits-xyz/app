@@ -107,6 +107,13 @@ export default function Cast({
     const proof = await noir.generateFinalProof(input);
     console.log(proof);
 
+    const timestamp = Buffer.from(proof.publicInputs[0]).toString('hex');
+    const note_root = Buffer.from(proof.publicInputs[1]).toString('hex');
+    console.log('timestamp');
+    console.log(timestamp);
+    console.log('note root');
+    console.log(note_root);
+
     setLoadingMessage('Verifying proof...');
 
     console.log('verifying proof');
@@ -115,6 +122,10 @@ export default function Cast({
     if (!verification) {
       throw new Error('Proof verification failed');
     }
+
+    await axios.post('https://33bits.xyz/api/cast', {
+      message
+    });
   };
 
   return (
