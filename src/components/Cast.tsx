@@ -31,6 +31,10 @@ function stringToPaddedByteArray(input: string): Uint8Array {
   return paddedArray;
 }
 
+const sleep = (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 export default function Cast({
   userFid,
@@ -44,7 +48,7 @@ export default function Cast({
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [response, setResponse] = useState<boolean | null>(null);
 
-  const cast = async () => {
+  const cast = async (): Promise<any> => {
     setLoadingMessage('Fetching Farcaster tree...');
 
     // @ts-ignore
@@ -67,6 +71,13 @@ export default function Cast({
     // Search for public key in members
     // TODO: not found yet
     const nodeIndex = tree.members.findIndex((x: any) => x.element.key === publicKey);
+
+    if (nodeIndex === -1) {
+      console.log('not found, sleeping');
+      await sleep(5000);
+
+      return cast();
+    }
 
     const node = tree.members[nodeIndex];
 

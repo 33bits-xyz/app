@@ -13,7 +13,7 @@ export function stringToHexArray(input: string): string[] {
   const chunkSize = 60;
   const hexArray: string[] = [];
   for (let i = 0; i < hexString.length; i += chunkSize) {
-      hexArray.push(hexString.substring(i, Math.min(i + chunkSize, hexString.length)));
+      hexArray.push('0x' + hexString.substring(i, Math.min(i + chunkSize, hexString.length)));
   }
 
   return hexArray;
