@@ -5,10 +5,11 @@ export const generate_signed_key_request = async (
   key: string,
   deadline: number,
   signature: string,
+  fid: number
 ) => {
   const request = {
     key,
-    requestFid: import.meta.env.VITE_FARCASTER_APP_FID,
+    requestFid: fid,
     deadline,
     signature
   } as SignedKeyRequest;

@@ -5,11 +5,12 @@ import Loader from "../components/Loader";
 import { useSelector, useDispatch } from 'react-redux';
 import { setPrivateKey, setSignedKeyResponse } from '../redux/authSlice';
 import { RootState } from '../redux/store';
-import { generate_private_key, generate_signature, get_public_key } from "../utils/keygen";
+import { generate_private_key, get_public_key } from "../utils/keygen";
 import { generate_signed_key_request } from "../utils/warpcast";
 
 import ConnectWarpcaster from "../components/ConnectWarpcaster";
 import Cast from "../components/Cast";
+import axios from "axios";
 
 
 export default function Main() {
@@ -34,9 +35,26 @@ export default function Main() {
       console.log('public key');
       console.log(publicKey);
 
-      const { signature, deadline } = await generate_signature(publicKey);
+      const {
+        data: {
+          signature,
+          deadline,
+          fid
+        }
+      } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/sign`, {
+        public_key: publicKey
+      });
 
-      const response = await generate_signed_key_request(publicKey, deadline, signature);
+      console.log(signature);
+      console.log(deadline);
+      console.log(fid);
+
+      const response = await generate_signed_key_request(
+        publicKey,
+        deadline,
+        signature,
+        fid
+      );
 
       dispatch(setSignedKeyResponse(response));
     };

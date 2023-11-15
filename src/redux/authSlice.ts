@@ -5,6 +5,7 @@ interface AuthState {
   privateKey: string | null;
   signedKeyResponse: SignedKeyRequestResponse | null;
   userFid: number | null;
+  messages: string[];
 }
 
 // Define the initial state using that type
@@ -12,6 +13,7 @@ const initialState: AuthState = {
   privateKey: null,
   signedKeyResponse: null,
   userFid: null,
+  messages: [],
 };
 
 export const authSlice = createSlice({
@@ -27,8 +29,11 @@ export const authSlice = createSlice({
     setUserFid(state, action: PayloadAction<number>) {
       state.userFid = action.payload;
     },
+    addMessageUuid(state, action: PayloadAction<string>) {
+      state.messages.push(action.payload);
+    },
   },
 });
 
-export const { setPrivateKey, setSignedKeyResponse, setUserFid } = authSlice.actions;
+export const { setPrivateKey, setSignedKeyResponse, setUserFid, addMessageUuid } = authSlice.actions;
 export default authSlice.reducer;

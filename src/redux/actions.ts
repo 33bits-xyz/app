@@ -2,6 +2,7 @@
 export const SET_PRIVATE_KEY = 'SET_PRIVATE_KEY';
 export const SET_SIGNED_KEY_RESPONSE = 'SET_SIGNED_KEY_RESPONSE';
 export const SET_USER_FID = 'SET_USER_FID';
+export const ADD_MESSAGE_UUID = 'ADD_MESSAGE_UUID';
 
 // Action Interfaces
 interface SetPrivateKeyAction {
@@ -19,7 +20,12 @@ interface SetUserFidAction {
   payload: number;
 }
 
-export type AuthActionTypes = SetPrivateKeyAction | SetSignedKeyResponseAction | SetUserFidAction;
+interface AddMessageUuidAction {
+  type: typeof ADD_MESSAGE_UUID;
+  payload: string;
+}
+
+export type AuthActionTypes = SetPrivateKeyAction | SetSignedKeyResponseAction | SetUserFidAction | AddMessageUuidAction;
 
 // Action Creators
 export const setPrivateKey = (privateKey: string): SetPrivateKeyAction => ({
@@ -35,4 +41,9 @@ export const setSignedKeyResponse = (response: SignedKeyRequestResponse): SetSig
 export const setUserFid = (userFid: number): SetUserFidAction => ({
   type: SET_USER_FID,
   payload: userFid,
+});
+
+export const addMessageUuid = (uuid: string): AddMessageUuidAction => ({
+  type: ADD_MESSAGE_UUID,
+  payload: uuid,
 });

@@ -10,10 +10,8 @@ import circuit from './../../circuits/target/main.json';
 
 import axios from "axios";
 import { stringToHexArray } from "../utils/string";
-
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { useDispatch } from "react-redux";
+import { addMessageUuid } from "../redux/authSlice";
 
 
 function stringToPaddedByteArray(input: string): Uint8Array {
@@ -48,6 +46,8 @@ export default function Cast({
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [response, setResponse] = useState<boolean | null>(null);
 
+  const dispatch = useDispatch();
+
   const cast = async (): Promise<any> => {
     setLoadingMessage('Fetching Farcaster tree...');
 
@@ -58,15 +58,24 @@ export default function Cast({
 
     const publicKey = await get_public_key(privateKey);
 
-    console.log('casting');
-    console.log('private key');
-    console.log(privateKey);
-    console.log('public key');
-    console.log(publicKey);
+    // console.log('casting');
+    // console.log('private key');
+    // console.log(privateKey);
+    // console.log('public key');
+    // console.log(publicKey);
+
+    // const v = await noir.verifyFinalProof({
+    //   proof: new Uint8Array(p.proof),
+    //   publicInputs: p.publicInputs.map(i => new Uint8Array(i))
+    // });
+
+    // console.log(v);
+
+    // return;
 
     const {
       data: tree
-    } = await axios('https://33bits.xyz/api');
+    } = await axios(`${import.meta.env.VITE_API_BASE_URL}`);
 
     // Search for public key in members
     // TODO: not found yet
@@ -107,12 +116,12 @@ export default function Cast({
     const proof = await noir.generateFinalProof(input);
     console.log(proof);
 
-    const timestamp = Buffer.from(proof.publicInputs[0]).toString('hex');
-    const note_root = Buffer.from(proof.publicInputs[1]).toString('hex');
-    console.log('timestamp');
-    console.log(timestamp);
-    console.log('note root');
-    console.log(note_root);
+    // const timestamp = Buffer.from(proof.publicInputs[0]).toString('hex');
+    // const note_root = Buffer.from(proof.publicInputs[1]).toString('hex');
+    // console.log('timestamp');
+    // console.log(timestamp);
+    // console.log('note root');
+    // console.log(note_root);
 
     setLoadingMessage('Verifying proof...');
 
@@ -123,9 +132,22 @@ export default function Cast({
       throw new Error('Proof verification failed');
     }
 
-    await axios.post('https://33bits.xyz/api/cast', {
+    // const proof_string = JSON.stringify({
+    //   proof: Array.from(proof.proof),
+    //   publicInputs: proof.publicInputs.map(i => Array.from(i))
+    // });
+
+    setLoadingMessage('Casting...');
+
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/cast`, {
+      proof: {
+        proof: Array.from(proof.proof),
+        publicInputs: proof.publicInputs.map(i => Array.from(i))
+      },
       message
     });
+
+    dispatch(addMessageUuid(response.data.uuid));
   };
 
   return (
@@ -146,7 +168,7 @@ export default function Cast({
         {
           loading === false && (
             <Button
-              disabled={loading || message.length === 0}
+              disabled={loading || message.length === 0 || userFid > 10000}
               onClick={() => {
                 setLoading(true);
                 setResponse(null);
@@ -173,30 +195,37 @@ export default function Cast({
       </div>
 
       {
-          loading === true && (
-            <>
-              <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
-                <Hourglass size={32} style={{ margin: 10 }} />
+        loading === true && (
+          <>
+            <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
+              <Hourglass size={32} style={{ margin: 10 }} />
 
-                <p>{ loadingMessage }</p>
-              </div>
-            </>
-          )
-        }
+              <p>{ loadingMessage }</p>
+            </div>
+          </>
+        )
+      }
 
-        {
-          response === true &&
-          (
-            <p>Successfully published! Your message will appear in <Anchor href="https://warpcast.com/33bits">@33bits</Anchor> soon.</p>
-          )
-        }
+      {
+        response === true &&
+        (
+          <p>Successfully published! Your message will appear in <Anchor target="_blank" href="https://warpcast.com/33bits">@33bits</Anchor> soon.</p>
+        )
+      }
 
-        {
-          response === false &&
-          (
-            <p>Something went wrong. Please, try again later or contact our support</p>
-          )
-        }
+      {
+        response === false &&
+        (
+          <p>Something went wrong. Please, try again later or contact our support</p>
+        )
+      }
+
+      {
+        userFid > 10000 && 
+        (
+          <p>Currently only first 10k Farcaster users are allowed to use 33bits. Stay in touch, we'll remove the whitelist soon!</p>
+        )
+      }
     </>
   );
 }
