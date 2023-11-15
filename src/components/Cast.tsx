@@ -41,15 +41,16 @@ export default function Cast({
   userFid: number,
   privateKey: string
 }) {
-  const [message, setMessage] = useState<string>("Test cast");
+  const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [response, setResponse] = useState<boolean | null>(null);
+  const [proofGenerationWarningVisible, setProofGenerationWarningVisible] = useState<boolean>(true);
 
   const dispatch = useDispatch();
 
   const cast = async (): Promise<any> => {
-    setLoadingMessage('Fetching Farcaster tree...');
+    setLoadingMessage('Fetching Farcaster FIDs tree...');
 
     // @ts-ignore
     const backend = new BarretenbergBackend(circuit);
@@ -111,7 +112,7 @@ export default function Cast({
 
     console.log('generating proof');
 
-    setLoadingMessage('Generating proof...');
+    setLoadingMessage('Generating the proof...');
 
     const proof = await noir.generateFinalProof(input);
     console.log(proof);
@@ -123,7 +124,7 @@ export default function Cast({
     // console.log('note root');
     // console.log(note_root);
 
-    setLoadingMessage('Verifying proof...');
+    setLoadingMessage('Verifying the proof...');
 
     console.log('verifying proof');
     const verification = await noir.verifyFinalProof(proof);
@@ -172,6 +173,7 @@ export default function Cast({
               onClick={() => {
                 setLoading(true);
                 setResponse(null);
+                setProofGenerationWarningVisible(false);
     
                 cast()
                   .then(() => {
@@ -195,6 +197,14 @@ export default function Cast({
       </div>
 
       {
+        proofGenerationWarningVisible && (
+          <p>
+            * Proof generation might take a few minutes.
+          </p>
+        )
+      }
+
+      {
         loading === true && (
           <>
             <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
@@ -209,21 +219,21 @@ export default function Cast({
       {
         response === true &&
         (
-          <p>Successfully published! Your message will appear in <Anchor target="_blank" href="https://warpcast.com/33bits">@33bits</Anchor> soon.</p>
+          <p>You cast was published successfully. View it on <Anchor target="_blank" href="https://warpcast.com/33bits">@33bits</Anchor> soon.</p>
         )
       }
 
       {
         response === false &&
         (
-          <p>Something went wrong. Please, try again later or contact our support</p>
+          <p>Something went wrong. Please, try again.</p>
         )
       }
 
       {
         userFid > 10000 && 
         (
-          <p>Currently only first 10k Farcaster users are allowed to use 33bits. Stay in touch, we'll remove the whitelist soon!</p>
+          <p>Currently only first 10k Farcaster users are allowed to cast. Stay in touch, we'll remove the whitelist soon!</p>
         )
       }
     </>

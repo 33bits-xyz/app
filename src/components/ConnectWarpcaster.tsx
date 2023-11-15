@@ -33,8 +33,7 @@ export default function ConnectWarpcaster({
   return (
     <>
       <p>
-        Welcome to <Anchor href="https://warpcaster.com/33bits" target="_blank">33bits</Anchor> community! 
-        Sign in with Warpcaster to start. 
+        Hey! Sign in with your Farcaster account to get started
       </p>
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
         <a
@@ -46,7 +45,7 @@ export default function ConnectWarpcaster({
       </div>
 
       <p>
-      Your login details are used only to verify your identity and are not sent anywhere.
+        Your FID is not stored or sent anywhere. It is only used for generating zero-knowledge proofs.
       </p>
     </>
   );

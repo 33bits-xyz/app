@@ -23,6 +23,8 @@ export default function Settings() {
 
   useEffect(() => {
     const fetch_messages = async () => {
+      if (!message_ids) return;
+
       const messages = await Promise.all(message_ids.map(async (message_id: string) => {
         const response = await axios.get(`https://snaphost.nyc3.digitaloceanspaces.com/public/33bits/${message_id}.json`);
 
@@ -40,7 +42,7 @@ export default function Settings() {
     fetch_messages();
   }, [message_ids]);
 
-  if (messages === null && message_ids.length > 0) {
+  if (messages === null && message_ids !== undefined && message_ids.length > 0) {
     return <Loader />;
   }
 
