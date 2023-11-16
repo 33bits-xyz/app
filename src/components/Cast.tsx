@@ -41,7 +41,7 @@ export default function Cast({
   userFid: number,
   privateKey: string
 }) {
-  const [message, setMessage] = useState<string>(`Hola ${new Date()}`);
+  const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [response, setResponse] = useState<boolean | null>(null);
