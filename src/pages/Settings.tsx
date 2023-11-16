@@ -18,37 +18,37 @@ type Message = {
 
 
 export default function Settings() {
-  const message_ids = useSelector((state: RootState) => state.auth.messages);
-  const [messages, setMessages] = React.useState<Message[] | null>(null);
+  // const message_ids = useSelector((state: RootState) => state.auth.messages);
+  // const [messages, setMessages] = React.useState<Message[] | null>(null);
 
-  useEffect(() => {
-    const fetch_messages = async () => {
-      if (!message_ids) return;
+  // useEffect(() => {
+  //   const fetch_messages = async () => {
+  //     if (!message_ids) return;
 
-      const messages = await Promise.all(message_ids.map(async (message_id: string) => {
-        const response = await axios.get(`https://snaphost.nyc3.digitaloceanspaces.com/public/33bits/${message_id}.json`);
+  //     const messages = await Promise.all(message_ids.map(async (message_id: string) => {
+  //       const response = await axios.get(`https://snaphost.nyc3.digitaloceanspaces.com/public/33bits/${message_id}.json`);
 
-        const inputs = extractData(response.data.proof.publicInputs);
+  //       const inputs = extractData(response.data.proof.publicInputs);
 
-        return {
-          text: inputs.message,
-          cast_hash: response.data.cast_hash
-        }
-      }));
+  //       return {
+  //         text: inputs.message,
+  //         cast_hash: response.data.cast_hash
+  //       }
+  //     }));
 
-      setMessages(messages);
-    };
+  //     setMessages(messages);
+  //   };
 
-    fetch_messages();
-  }, [message_ids]);
+  //   fetch_messages();
+  // }, [message_ids]);
 
-  if (messages === null && message_ids !== undefined && message_ids.length > 0) {
-    return <Loader />;
-  }
+  // if (messages === null && message_ids !== undefined && message_ids.length > 0) {
+  //   return <Loader />;
+  // }
 
   return (
     <>
-      {
+      {/* {
         messages && messages.length > 0 && (
           <GroupBox label='Your casts'>
             <li>
@@ -68,7 +68,7 @@ export default function Settings() {
             </li>
           </GroupBox>
         )
-      }
+      } */}
 
       <Button className="mt-3" fullWidth onClick={() => {
         localStorage.clear();

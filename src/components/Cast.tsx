@@ -11,7 +11,7 @@ import circuit from './../../circuits/target/main.json';
 import axios from "axios";
 import { stringToHexArray } from "../utils/string";
 import { useDispatch } from "react-redux";
-import { addMessageUuid } from "../redux/authSlice";
+// import { addMessageUuid } from "../redux/authSlice";
 
 
 function stringToPaddedByteArray(input: string): Uint8Array {
@@ -148,7 +148,7 @@ export default function Cast({
       message
     });
 
-    dispatch(addMessageUuid(response.data.uuid));
+    // dispatch(addMessageUuid(response.data.uuid));
   };
 
   return (
