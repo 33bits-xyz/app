@@ -24,8 +24,8 @@ export default function FAQ() {
             </p>
 
             <Separator className="my-3" />
-            <p>Built by <Anchor href="https://warpcast.com/fastfourier.eth" target="_blank">@fastfourtier</Anchor> and <Anchor target="_blank" href="https://warpcast.com/kugusha.eth">@kugusha</Anchor>.</p>
-            <p>Code is open source - <Anchor href="https://github.com/33bits-xyz" target="_blank">Github</Anchor></p>
+            <p>Built by <Anchor href="https://warpcast.com/fastfourier.eth" target="_blank">@fastfourtier</Anchor> and <Anchor target="_blank" href="https://warpcast.com/kugusha.eth">@kugusha</Anchor>, inspired by the OGs <Anchor href="https://www.heyanon.xyz/" target="_blank">@heyanon</Anchor> and <Anchor href="https://sismo.io" target="_blank">Sismo.io</Anchor>.</p>
+            <p>The code is <Anchor href="https://github.com/33bits-xyz" target="_blank">open source</Anchor>.</p>
         </div>
     );
 }
