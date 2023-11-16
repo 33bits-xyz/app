@@ -70,7 +70,7 @@ export default function Settings() {
         )
       } */}
 
-      <Button className="mt-3" fullWidth onClick={() => {
+      <Button className="my-1" fullWidth onClick={() => {
         localStorage.clear();
         window.location.reload();
       }}>Sign out ⚠️</Button>

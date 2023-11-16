@@ -1,5 +1,5 @@
 import React from "react";
-import { Separator } from "react95";
+import { Anchor, ScrollView, Separator } from "react95";
 
 
 export default function FAQ() {
@@ -22,6 +22,10 @@ export default function FAQ() {
             <p>
                 Eligibility for posting on 33bits is exclusive to Farcaster accounts with fid ≤ 10001.
             </p>
+
+            <Separator className="my-3" />
+            <p>Built by <Anchor href="https://warpcast.com/fastfourier.eth" target="_blank">@fastfourtier</Anchor> and <Anchor target="_blank" href="https://warpcast.com/kugusha.eth">@kugusha</Anchor>.</p>
+            <p>Code is open source - <Anchor href="https://github.com/33bits-xyz" target="_blank">Github</Anchor></p>
         </div>
     );
 }
