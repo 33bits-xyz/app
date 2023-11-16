@@ -9,7 +9,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import { Button, Tab, TabBody, Tabs, Window, WindowContent, WindowHeader } from 'react95';
+import { Button, Monitor, Tab, TabBody, Tabs, Window, WindowContent, WindowHeader } from 'react95';
 
 import Main from './pages/Main';
 import FAQ from './pages/FAQ';
@@ -21,31 +21,50 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const maintenance = import.meta.env.VITE_MAINTENANCE_MODE;
+
   return (
     <Container fluid>
       <Row className='pt-5 pb-5 justify-content-md-center'>
-        <Col xs={12} lg={6}>
+        <Col xs={12} lg={4}>
           <Window className='window' style={{ width: '100%' }}>
             <WindowHeader>
               <span>33bits.exe</span>
             </WindowHeader>
 
             <WindowContent>
-              <Tabs value={location.pathname.replace('/', '')} onChange={(page) => navigate(page)}>
-                <Tab value={''}>Cast</Tab>
-                <Tab value={'settings'}>Settings</Tab>
-                <Tab value={'faq'}>FAQ</Tab>
-                <Tab value={'about'}>About</Tab>
-              </Tabs>
+              {
+                maintenance && (
+                  <div className='text-center'>
+                    <Monitor backgroundStyles={{ background: 'blue' }} ></Monitor>
+                    <p className='mt-5'>
+                      33bits is currently under maintenance, come back later.
+                    </p>
+                  </div>
+                )
+              }
 
-              <TabBody>
-                <Routes>
-                  <Route path='/' element={ <Main /> }></Route>
-                  <Route path='/faq' element={ <FAQ /> }></Route>
-                  <Route path='/about' element={ <About /> }></Route>
-                  <Route path='/settings' element={ <Settings /> }></Route>
-                </Routes>
-              </TabBody>
+              {
+                !maintenance && (
+                  <>
+                    <Tabs value={location.pathname.replace('/', '')} onChange={(page) => navigate(page)}>
+                      <Tab value={''}>Cast</Tab>
+                      <Tab value={'settings'}>Settings</Tab>
+                      <Tab value={'faq'}>FAQ</Tab>
+                      <Tab value={'about'}>About</Tab>
+                    </Tabs>
+      
+                    <TabBody>
+                      <Routes>
+                        <Route path='/' element={ <Main /> }></Route>
+                        <Route path='/faq' element={ <FAQ /> }></Route>
+                        <Route path='/about' element={ <About /> }></Route>
+                        <Route path='/settings' element={ <Settings /> }></Route>
+                      </Routes>
+                    </TabBody>
+                  </>
+                )
+              }
             </WindowContent>
           </Window>
         </Col>
