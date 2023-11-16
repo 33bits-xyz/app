@@ -13,7 +13,6 @@ import { Button, Monitor, Tab, TabBody, Tabs, Window, WindowContent, WindowHeade
 
 import Main from './pages/Main';
 import FAQ from './pages/FAQ';
-import About from './pages/About';
 import Settings from './pages/Settings';
 
 
