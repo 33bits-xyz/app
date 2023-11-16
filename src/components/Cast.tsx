@@ -41,7 +41,7 @@ export default function Cast({
   userFid: number,
   privateKey: string
 }) {
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>(`Hola ${new Date()}`);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [response, setResponse] = useState<boolean | null>(null);
@@ -59,28 +59,12 @@ export default function Cast({
 
     const publicKey = await get_public_key(privateKey);
 
-    // console.log('casting');
-    // console.log('private key');
-    // console.log(privateKey);
-    // console.log('public key');
-    // console.log(publicKey);
-
-    // const v = await noir.verifyFinalProof({
-    //   proof: new Uint8Array(p.proof),
-    //   publicInputs: p.publicInputs.map(i => new Uint8Array(i))
-    // });
-
-    // console.log(v);
-
-    // return;
-
     const {
       data: tree
-    } = await axios(`${import.meta.env.VITE_API_BASE_URL}`);
+    } = await axios(`${import.meta.env.VITE_API_BASE_URL}/farcaster/tree`);
 
-    // Search for public key in members
-    // TODO: not found yet
-    const nodeIndex = tree.members.findIndex((x: any) => x.element.key === publicKey);
+    // Search for public key
+    const nodeIndex = tree.elements.findIndex((x: any) => x.key === publicKey);
 
     if (nodeIndex === -1) {
       console.log('not found, sleeping');
@@ -89,12 +73,7 @@ export default function Cast({
       return cast();
     }
 
-    const node = tree.members[nodeIndex];
-
-    const messageBytes = Array.from(stringToPaddedByteArray(message));
-
-    console.log('message bytes');
-    console.log(messageBytes);
+    const node = tree.elements[nodeIndex];
 
     const input = {
       fid: userFid,
@@ -124,14 +103,14 @@ export default function Cast({
     // console.log('note root');
     // console.log(note_root);
 
-    setLoadingMessage('Verifying the proof...');
+    // setLoadingMessage('Verifying the proof...');
 
-    console.log('verifying proof');
-    const verification = await noir.verifyFinalProof(proof);
+    // console.log('verifying proof');
+    // const verification = await noir.verifyFinalProof(proof);
 
-    if (!verification) {
-      throw new Error('Proof verification failed');
-    }
+    // if (!verification) {
+    //   throw new Error('Proof verification failed');
+    // }
 
     // const proof_string = JSON.stringify({
     //   proof: Array.from(proof.proof),
@@ -140,13 +119,12 @@ export default function Cast({
 
     setLoadingMessage('Casting...');
 
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/cast`, {
-      proof: {
-        proof: Array.from(proof.proof),
-        publicInputs: proof.publicInputs.map(i => Array.from(i))
-      },
-      message
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/farcaster/cast`, {
+      proof: Array.from(proof.proof),
+      publicInputs: proof.publicInputs.map(i => Array.from(i))
     });
+
+    console.log(response);
 
     // dispatch(addMessageUuid(response.data.uuid));
   };

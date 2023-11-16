@@ -29,25 +29,15 @@ export default function Main() {
     const setupSignedKeyResponse = async () => {
       const publicKey = await get_public_key(privateKey);
 
-      console.log('preparing signed response');
-      console.log('private key');
-      console.log(privateKey);
-      console.log('public key');
-      console.log(publicKey);
-
       const {
         data: {
           signature,
           deadline,
           fid
         }
-      } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/sign`, {
+      } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/farcaster/sign_public_key`, {
         public_key: publicKey
       });
-
-      console.log(signature);
-      console.log(deadline);
-      console.log(fid);
 
       const response = await generate_signed_key_request(
         publicKey,

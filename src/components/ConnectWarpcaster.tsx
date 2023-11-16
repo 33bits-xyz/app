@@ -33,7 +33,7 @@ export default function ConnectWarpcaster({
   return (
     <>
       <p>
-        Hey! Sign in with your Farcaster account to get started
+        Hey! Sign in with your Farcaster account to get started. Click on QR code or scan it with your mobile device.
       </p>
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
         <a
