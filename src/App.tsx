@@ -51,15 +51,13 @@ export default function App() {
                       <Tab value={''}>Cast</Tab>
                       <Tab value={'settings'}>Settings</Tab>
                       <Tab value={'faq'}>FAQ</Tab>
-                      <Tab value={'about'}>About</Tab>
                     </Tabs>
       
                     <TabBody>
                       <Routes>
                         <Route path='/' element={ <Main /> }></Route>
-                        <Route path='/faq' element={ <FAQ /> }></Route>
-                        <Route path='/about' element={ <About /> }></Route>
                         <Route path='/settings' element={ <Settings /> }></Route>
+                        <Route path='/faq' element={ <FAQ /> }></Route>
                       </Routes>
                     </TabBody>
                   </>
