@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Anchor, Button, Hourglass, ProgressBar, TextInput } from "react95";
 import { get_public_key } from "../utils/keygen";
 import { Buffer } from "buffer"; 
+import './inputs.css';
 
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
@@ -12,6 +13,9 @@ import axios from "axios";
 import { stringToHexArray } from "../utils/string";
 import { useDispatch } from "react-redux";
 // import { addMessageUuid } from "../redux/authSlice";
+
+
+const MAX_LENGTH = 150;
 
 
 function stringToPaddedByteArray(input: string): Uint8Array {
@@ -133,21 +137,30 @@ export default function Cast({
     <>
       {/* <p>Hello, {userFid}</p> */}
 
-      <TextInput
-        multiline
-        rows={4}
-        value={message}
-        disabled={loading}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="What's on your mind?"
-        fullWidth
-      />
+      <div className="textarea-container">
+        <TextInput
+          id="textArea"
+          multiline
+          rows={4}
+          value={message}
+          disabled={loading}
+          onChange={(e) => {
+            if (e.target.value.length <= MAX_LENGTH) setMessage(e.target.value);
+          }}
+          placeholder="What's on your mind?"
+          fullWidth
+        />
+
+        <div id="counter" className={message.length >= MAX_LENGTH * 0.8 ? 'counter text-danger' : 'counter'}>
+          { message.length } / { MAX_LENGTH }
+        </div>
+      </div>
 
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
         {
           loading === false && (
             <Button
-              disabled={loading || message.length === 0}
+              disabled={loading || message.length === 0 || message.length >= MAX_LENGTH}
               onClick={() => {
                 setLoading(true);
                 setResponse(null);
