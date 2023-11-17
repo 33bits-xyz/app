@@ -14,7 +14,7 @@ fn main(
   // Merkle membership proof
   note_root: pub Field,
   index: Field,
-  note_hash_path: [Field; 32],
+  note_hash_path: [Field; 14],
   // Message
   message: pub [Field; 16]
 ) -> pub [Field; 16] {
@@ -34,7 +34,7 @@ fn main(
 
 
 // Returns the root of the tree from the provided leaf and its hashpath, using mimc hash
-fn compute_root_from_leaf(leaf : Field, index : Field, hash_path: [Field; 32]) -> Field {
+fn compute_root_from_leaf(leaf : Field, index : Field, hash_path: [Field; 14]) -> Field {
     let n = hash_path.len();
     let index_bits = index.to_le_bits(n as u32);
     let mut current = leaf;
