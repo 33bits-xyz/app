@@ -147,7 +147,7 @@ export default function Cast({
         {
           loading === false && (
             <Button
-              disabled={loading || message.length === 0 || userFid > 10000}
+              disabled={loading || message.length === 0}
               onClick={() => {
                 setLoading(true);
                 setResponse(null);
@@ -208,12 +208,12 @@ export default function Cast({
         )
       }
 
-      {
+      {/* {
         userFid > 10000 && 
         (
           <p>Currently only first 10k Farcaster users are allowed to cast. Stay in touch, we'll remove the whitelist soon!</p>
         )
-      }
+      } */}
     </>
   );
 }
