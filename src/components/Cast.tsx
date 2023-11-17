@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 // import { addMessageUuid } from "../redux/authSlice";
 
 
-const MAX_LENGTH = 150;
+const MAX_LENGTH = 320;
 
 
 function stringToPaddedByteArray(input: string): Uint8Array {
