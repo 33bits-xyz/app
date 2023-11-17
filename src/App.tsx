@@ -14,6 +14,7 @@ import { Button, Monitor, Tab, TabBody, Tabs, Window, WindowContent, WindowHeade
 import Main from './pages/Main';
 import FAQ from './pages/FAQ';
 import Settings from './pages/Settings';
+import { Verify } from './pages/Verify';
 
 
 export default function App() {
@@ -49,6 +50,7 @@ export default function App() {
                     <Tabs value={location.pathname.replace('/', '')} onChange={(page) => navigate(page)}>
                       <Tab value={''}>Cast</Tab>
                       <Tab value={'settings'}>Settings</Tab>
+                      <Tab value={'verify'}>Verify</Tab>
                       <Tab value={'faq'}>FAQ</Tab>
                     </Tabs>
       
@@ -56,6 +58,7 @@ export default function App() {
                       <Routes>
                         <Route path='/' element={ <Main /> }></Route>
                         <Route path='/settings' element={ <Settings /> }></Route>
+                        <Route path='/verify' element={ <Verify /> }></Route>
                         <Route path='/faq' element={ <FAQ /> }></Route>
                       </Routes>
                     </TabBody>
