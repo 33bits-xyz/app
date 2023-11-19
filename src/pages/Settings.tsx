@@ -69,11 +69,14 @@ export default function Settings() {
           </GroupBox>
         )
       } */}
+      <div>
+        <p>Signing out will require you to authenticate again in the future.</p>
 
-      <Button className="my-1" fullWidth onClick={() => {
-        localStorage.clear();
-        window.location.reload();
-      }}>Sign out ⚠️</Button>
+        <Button className="my-2" fullWidth onClick={() => {
+          localStorage.clear();
+          window.location.reload();
+        }}>Sign out ⚠️</Button>
+      </div>
     </>
   );
 }

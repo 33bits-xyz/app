@@ -95,7 +95,7 @@ export default function Cast({
 
     console.log('generating proof');
 
-    setLoadingMessage('Generating the proof...');
+    setLoadingMessage('Hold on, generating the zk proof…');
 
     const proof = await noir.generateFinalProof(input);
     console.log(proof);
@@ -121,7 +121,7 @@ export default function Cast({
     //   publicInputs: proof.publicInputs.map(i => Array.from(i))
     // });
 
-    setLoadingMessage('Casting...');
+    setLoadingMessage('Verifying the zk proof and sending your cast. Please keep this tab open.');
 
     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/farcaster/cast`, {
       proof: Array.from(proof.proof),
@@ -190,7 +190,7 @@ export default function Cast({
       {
         proofGenerationWarningVisible && (
           <p>
-            * Proof generation might take a few minutes.
+            * It will take a few minutes to generate and verify the proof.
           </p>
         )
       }
@@ -210,14 +210,14 @@ export default function Cast({
       {
         response === true &&
         (
-          <p>You cast was published successfully. View it on <Anchor target="_blank" href="https://warpcast.com/potekhin">@33bits</Anchor> soon.</p>
+          <p>Your cast was published successfully. View it on <Anchor target="_blank" href="https://warpcast.com/potekhin">@33bits</Anchor>.</p>
         )
       }
 
       {
         response === false &&
         (
-          <p>Something went wrong. Please, try again.</p>
+          <p>Something went wrong. Please, try casting again.</p>
         )
       }
 

@@ -13,6 +13,7 @@ import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
 
 import circuit from './../../circuits/target/main.json';
+import Link33bits from "../components/Link_33bits";
 
 
 export const HUMAN_DATE_TIME_FORMAT = 'MMM Do YYYY, h:mm a';
@@ -90,7 +91,7 @@ export function Verify() {
       <Row className="pb-3">
         <Col>
           <p>
-            Verify if a cast on the <Anchor href="https://warpcast.com/33bits" target="_blank">@33bits</Anchor> feed was posted by an eligible account.
+            Verify if a cast on the {<Link33bits />} feed was posted by an eligible account.
           </p>
         </Col>
       </Row>
