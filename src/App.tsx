@@ -22,6 +22,7 @@ export default function App() {
   const location = useLocation();
 
   const maintenance = import.meta.env.VITE_MAINTENANCE_MODE;
+  const activeTab = location.pathname.replace('/', '');
 
   return (
     <Container fluid>
@@ -47,7 +48,7 @@ export default function App() {
               {
                 !maintenance && (
                   <>
-                    <Tabs value={location.pathname.replace('/', '')} onChange={(page) => navigate(page)}>
+                    <Tabs value={activeTab} onChange={(page) => navigate('/' + page)}>
                       <Tab value={''}>Cast</Tab>
                       <Tab value={'settings'}>Settings</Tab>
                       <Tab value={'verify'}>Verify</Tab>
@@ -55,12 +56,18 @@ export default function App() {
                     </Tabs>
       
                     <TabBody>
-                      <Routes>
-                        <Route path='/' element={ <Main /> }></Route>
-                        <Route path='/settings' element={ <Settings /> }></Route>
-                        <Route path='/verify' element={ <Verify /> }></Route>
-                        <Route path='/faq' element={ <FAQ /> }></Route>
-                      </Routes>
+                      <div style={{ display: activeTab === '' ? 'block' : 'none' }}>
+                        <Main />
+                      </div>
+                      <div style={{ display: activeTab === 'settings' ? 'block' : 'none' }}>
+                        <Settings />
+                      </div>
+                      <div style={{ display: activeTab === 'verify' ? 'block' : 'none' }}>
+                        <Verify />
+                      </div>
+                      <div style={{ display: activeTab === 'faq' ? 'block' : 'none' }}>
+                        <FAQ />
+                      </div>
                     </TabBody>
                   </>
                 )
