@@ -164,7 +164,7 @@ export function Verify() {
           <>
             <Row className="pt-2">
               <Col>
-                <p className="text-success">Status: the zk proof is valid!</p>
+                <p className="text-success">Status: This zk proof is valid!</p>
               </Col>
             </Row>
             <Row>
