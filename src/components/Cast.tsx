@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Anchor, Button, Hourglass, ProgressBar, TextInput } from "react95";
 import { get_public_key } from "../utils/keygen";
 import { Buffer } from "buffer"; 
@@ -160,7 +160,7 @@ export default function Cast({
         {
           loading === false && (
             <Button
-              disabled={loading || message.length === 0 || message.length >= MAX_LENGTH}
+              disabled={loading || message.length === 0}
               onClick={() => {
                 setLoading(true);
                 setResponse(null);
@@ -199,9 +199,12 @@ export default function Cast({
         loading === true && (
           <>
             <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
-              <Hourglass size={32} style={{ margin: 10 }} />
-
-              <p>{ loadingMessage }</p>
+              <div>
+                <Hourglass size={32} style={{ margin: 10 }} />
+              </div>
+              <div>
+                <p>{ loadingMessage }</p>
+              </div>
             </div>
           </>
         )
