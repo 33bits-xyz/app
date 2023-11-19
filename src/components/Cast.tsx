@@ -145,13 +145,13 @@ export default function Cast({
           value={message}
           disabled={loading}
           onChange={(e) => {
-            if (e.target.value.length <= MAX_LENGTH) setMessage(e.target.value);
+            setMessage(e.target.value.slice(0, MAX_LENGTH));
           }}
           placeholder="What's on your mind?"
           fullWidth
         />
 
-        <div id="counter" className={message.length >= MAX_LENGTH * 0.8 ? 'counter text-danger' : 'counter'}>
+        <div id="counter" className={message.length >= MAX_LENGTH * 0.9 ? 'counter text-danger' : 'counter'}>
           { message.length } / { MAX_LENGTH }
         </div>
       </div>
