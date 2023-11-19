@@ -18,7 +18,7 @@ export default function FAQ() {
             <p>- Who can post on 33bits? </p>
             <br />
             <p>
-                Eligibility for posting on 33bits is exclusive to Farcaster accounts with fid ≤ 10001.
+                Eligibility for posting on 33bits is exclusive to Farcaster accounts with FID ≤ 10001.
             </p>
 
             <Separator className="my-3" />
