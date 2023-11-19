@@ -79,10 +79,10 @@ export function Verify() {
         if (verification) {
           setMessage(data);
         } else {
-          setError('Failed to verify the proof');
+          setError('Failed to verify this zk proof.');
         }  
       }).catch((e) => {
-        setError('Cast not found');
+        setError('This cast is not from the @33bits feed. Please provide a valid cast link.');
       });
   }
 
@@ -137,9 +137,9 @@ export function Verify() {
 
       {
         error != null && (
-          <Row className="text-center">
+          <Row className="">
             <Col className="pt-2">
-              <p className="text-danger">{error}</p>
+              <p className="text-danger">Status: {error}</p>
             </Col>
           </Row>
         )
