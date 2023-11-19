@@ -50,6 +50,7 @@ const GlobalStyles = createGlobalStyle`
 const Wrapper = styled.div`
   background: ${({ theme }) => theme.desktopBackground};
   min-height: 100vh;
+  a:visited { color: LinkText; }
 `;
 
 
