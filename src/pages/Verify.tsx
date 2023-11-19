@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Hourglass, TextInput } from "react95";
+import { Anchor, Button, Hourglass, TextInput } from "react95";
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -54,11 +54,11 @@ export function Verify() {
   const fetch = async (): Promise<any> => {
     const farcaster_hash = extractFarcasterHash(query);
 
-    setLoadingText('Fetching cast information...');
+    setLoadingText('Retrieving cast information...');
 
     await axios.get(`${import.meta.env.VITE_API_BASE_URL}/farcaster/farcaster_hash/${farcaster_hash}`)
       .then(async ({ data }) => {
-        setLoadingText('Verifiying zk proof...');
+        setLoadingText('Verifying the proof...');
     
         // Verify proof
         // @ts-ignore
@@ -78,7 +78,7 @@ export function Verify() {
         if (verification) {
           setMessage(data);
         } else {
-          setError('Failed to verify proof');
+          setError('Failed to verify the proof');
         }  
       }).catch((e) => {
         setError('Cast not found');
@@ -87,6 +87,14 @@ export function Verify() {
 
   return (
     <Container fluid>
+      <Row className="pb-3">
+        <Col>
+          <p>
+            Verify if a cast on the <Anchor href="https://warpcast.com/33bits" target="_blank">@33bits</Anchor> feed was posted by an eligible account.
+          </p>
+        </Col>
+      </Row>
+
       <Row className="text-center pb-2">
         <Col xs={12} sm={9} lg={9} className="pb-2">
           <TextInput
@@ -155,7 +163,7 @@ export function Verify() {
           <>
             <Row className="pt-2">
               <Col>
-                <p className="text-success">Cast verified!</p>
+                <p className="text-success">Status: the zk proof is valid!</p>
               </Col>
             </Row>
             <Row>
