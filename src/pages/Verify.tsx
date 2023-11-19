@@ -174,7 +174,7 @@ export function Verify() {
             </Row>
             <Row>
               <Col>
-                <p>Time: { moment(message.timestamp).format(HUMAN_DATE_TIME_FORMAT) }</p>
+                <p>Timestamp: {message.timestamp} ({ moment(message.timestamp).format(HUMAN_DATE_TIME_FORMAT) })</p>
               </Col>
             </Row>
             <Row>
