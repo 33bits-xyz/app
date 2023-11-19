@@ -145,7 +145,7 @@ export default function Cast({
           value={message}
           disabled={loading}
           onChange={(e) => {
-            setMessage(e.target.value.slice(0, MAX_LENGTH));
+            setMessage(e.target.value.slice(0, MAX_LENGTH - 1));
           }}
           placeholder="What's on your mind?"
           fullWidth
