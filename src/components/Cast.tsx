@@ -141,11 +141,11 @@ export default function Cast({
         <TextInput
           id="textArea"
           multiline
-          rows={4}
+          rows={6}
           value={message}
           disabled={loading}
           onChange={(e) => {
-            setMessage(e.target.value.slice(0, MAX_LENGTH - 1));
+            setMessage(e.target.value.slice(0, MAX_LENGTH));
           }}
           placeholder="What's on your mind?"
           fullWidth
