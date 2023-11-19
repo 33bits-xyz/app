@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextInput } from "react95";
+import { Button, Hourglass, TextInput } from "react95";
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -35,11 +35,9 @@ interface Message {
 
 export function Verify() {
   const [query, setQuery] = useState<string>("");
-  const [error, setError] = useState<string | null>(null); // [error, setError
-  const [loading, setLoading] = useState<boolean>(false);
-  const [verifying, setVerifying] = useState<boolean>(false);
-  const [verified, setVerified] = useState<boolean | null>(null);
   const [message, setMessage] = useState<Message | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loadingText, setLoadingText] = useState<string | null>(null);
 
   const extractFarcasterHash = (text: string): string | null => {
     // Regular expression to match a Farcaster hash
@@ -56,31 +54,35 @@ export function Verify() {
   const fetch = async (): Promise<any> => {
     const farcaster_hash = extractFarcasterHash(query);
 
-    try {
-      const {
-        data
-      } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/farcaster/farcaster_hash/${farcaster_hash}`);  
+    setLoadingText('Fetching cast information...');
 
-      setMessage(data)
-    } catch (e) {
-      setError('Cast not found');
-    }
-  }
-
-  const verify = async (): Promise<boolean> => {
-    // @ts-ignore
-    const backend = new BarretenbergBackend(circuit);
-    // @ts-ignore
-    const noir = new Noir(circuit, backend);
+    await axios.get(`${import.meta.env.VITE_API_BASE_URL}/farcaster/farcaster_hash/${farcaster_hash}`)
+      .then(async ({ data }) => {
+        setLoadingText('Verifiying zk proof...');
     
-    await backend.instantiate();
-    await backend['api'].acirInitProvingKey(
-      backend['acirComposer'],
-      backend['acirUncompressedBytecode']
-    );
-
-    // @ts-ignore
-    return noir.verifyFinalProof(message?.proof);
+        // Verify proof
+        // @ts-ignore
+        const backend = new BarretenbergBackend(circuit);
+        // @ts-ignore
+        const noir = new Noir(circuit, backend);
+    
+        await backend.instantiate();
+        await backend['api'].acirInitProvingKey(
+          backend['acirComposer'],
+          backend['acirUncompressedBytecode']
+        );
+    
+        // @ts-ignore/
+        const verification = await noir.verifyFinalProof(data.proof);
+    
+        if (verification) {
+          setMessage(data);
+        } else {
+          setError('Failed to verify proof');
+        }  
+      }).catch((e) => {
+        setError('Cast not found');
+      });
   }
 
   return (
@@ -91,7 +93,6 @@ export function Verify() {
             rows={4}
             value={query}
             onChange={(e) => {
-              console.log(extractFarcasterHash(e.target.value));
               setQuery(e.target.value);
             }}
             placeholder="Enter cast url"
@@ -102,22 +103,22 @@ export function Verify() {
         <Col xs={12} sm={3} lg={3}>
           <Button
             fullWidth
-            disabled={loading || extractFarcasterHash(query) === null}
+            disabled={loadingText !== null || extractFarcasterHash(query) === null}
             onClick={() => {
-              setLoading(true);
-              setError(null);
               setMessage(null);
+              setError(null);
+              setLoadingText(null);
 
               fetch()
                 .then(() => {
-
+                  
                 })
                 .catch((e) => {
-                  console.log('error');
                   console.log(e);
+                  setError(`Verification failed: ${e.response.data.message}`);
                 })
                 .finally(() => {
-                  setLoading(false);
+                  setLoadingText(null);
                 })
             }}
           >Verify</Button>
@@ -136,11 +137,30 @@ export function Verify() {
       }
 
       {
+        loadingText != null && (
+          <Row className="text-center">
+            <Col className="pt-2">
+              <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
+                <Hourglass size={32} style={{ margin: 10 }} />
+
+                <p>{ loadingText }</p>
+              </div>
+            </Col>
+          </Row>
+        )
+      }
+
+      {
         message != null && (
           <>
             <Row className="pt-2">
               <Col>
-                <p>Text: "{ message.text }"</p> 
+                <p className="text-success">Cast verified!</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p style={{ wordBreak: 'break-all' }}>Text: "{ message.text }"</p> 
               </Col>
             </Row>
             <Row>
@@ -151,38 +171,6 @@ export function Verify() {
             <Row>
               <Col>
                 <p style={{ wordBreak: 'break-all' }}>Proof: { JSON.stringify(message.proof) }</p>
-              </Col>
-            </Row>
-
-            {
-              verified != null && (
-                <Row>
-                  <Col>
-                    <p 
-                      className={verified ? 'text-success' : 'text-danger'}
-                    >{ verified ? 'Proof is verified' : 'Failed to verify proof' }</p>
-                  </Col>
-                </Row>
-              )
-            }
-
-            <Row className="text-center pt-3">
-              <Col>
-                <Button
-                  disabled={verifying}
-                  onClick={(e) => {
-                    setVerifying(true);
-
-                    verify()
-                      .then((verification: boolean) => {
-                        console.log(verification);
-                        setVerified(verification);
-                      })
-                      .catch()
-                      .finally(() => {
-                        setVerifying(false);
-                      });
-                }}>{ verifying ? 'Verifying...' : 'Verify ZK proof' }</Button>
               </Col>
             </Row>
           </>
