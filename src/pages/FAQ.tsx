@@ -32,6 +32,20 @@ export default function FAQ() {
             </p>
 
             <Separator className="my-3" />
+
+            <p>- How does it work?</p>
+            <br />
+            <p>
+                When a user signs in with Warpcast, the 33bits app links their FID with a new signer.
+                To post a cast, the user must prove that their FID is ≤ 10001 through zero-knowledge (zk) proofs.
+                This proof is generated using the user's new signer.
+                The entire process, including authentication and proof generation, occurs in the user's browser, keeping their FID private.
+                Once the proof is created, it's verified on the app's backend.
+                If the proof is valid, the user's cast is sent through the API to the @33bits account and published on the feed anonymously.
+                For more tech details, please refer to the { <Anchor href="https://github.com/33bits-xyz/app" target="_blank">Github</Anchor> }.
+            </p>
+
+            <Separator className="my-3" />
             <p>- What is proof verification?</p>
             <br />
             <p>
