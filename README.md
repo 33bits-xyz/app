@@ -1,27 +1,37 @@
-# React + TypeScript + Vite
+# 33bits React application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Introduction
 
-Currently, two official plugins are available:
+33bits is a Farcaster-based application, which uses the zero knowledge proofs to provide a way for anonymous casting. Proofs are
+basically Proof-of-Inclusion in Merkle tree.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Working with zero-knowledge proofs
 
-## Expanding the ESLint configuration
+Current version uses Noir DSL for writing ZK circuits.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+```
+bash-3.2$ nargo --version
+nargo 0.17.0 (git version hash: 86704bad3af19dd03634cbec0d697ff8159ed683, is dirty: false)
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+To compile circuits locally, first install nargo ([docs](https://noir-lang.org/)), then run the following command:
+
+```
+cd circuits/
+nargo compile
+```
+
+## Start locally
+
+First, install the environment variables
+
+```
+cp .env.template .env
+```
+
+Next, install NodeJS dependencies and run the application
+
+```
+yarn
+yarn dev
+```
