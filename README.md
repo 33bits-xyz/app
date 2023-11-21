@@ -18,6 +18,19 @@ cd circuits/
 nargo compile
 ```
 
+## Why not use storage proofs?
+
+First version of the application was made to work with storage proofs. We've used [noir-trie-proofs](https://github.com/aragonzkresearch/noir-trie-proofs), a library made by Aragon and Noir with the support of Nouns DAO. Unfortunatelly, the implementation resulted in almost 2m gates,
+which means that proofs can't be generated in browser due to the RAM limitations.
+
+## Why use MiMC hash instead of EDDSA public key?
+
+The main reason for that is user experience - generating proofs for EDDSA operations such as public key derivation, would take longer
+then verifiying MiMC hash function.
+
+Another reason is security. Since signer's public key is not a "real" public key, then it can't be used for signing messages.
+So even if private key is stolen, attacker still can't use it to cast messages on user's behalf.
+
 ## Start locally
 
 First, install the environment variables
