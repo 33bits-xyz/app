@@ -213,7 +213,7 @@ export default function Cast({
       {
         response === true &&
         (
-          <p>Your cast was published successfully. View it on <Anchor target="_blank" href="https://warpcast.com/potekhin">@33bits</Anchor>.</p>
+          <p>Your cast was published successfully. View it on <Anchor target="_blank" href="https://warpcast.com/33bits">@33bits</Anchor>.</p>
         )
       }
 
