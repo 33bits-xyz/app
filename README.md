@@ -1,9 +1,6 @@
 # 33bits React application
 
-## Introduction
-
-33bits is a Farcaster-based application, which uses the zero knowledge proofs to provide a way for anonymous casting. Proofs are
-basically Proof-of-Inclusion in Merkle tree.
+33bits is a Farcaster-based application, which uses the zero knowledge proofs to provide a way for anonymous casting.
 
 ## Working with zero-knowledge proofs
 
