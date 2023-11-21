@@ -147,7 +147,7 @@ export default function Cast({
           onChange={(e) => {
             setMessage(e.target.value.slice(0, MAX_LENGTH));
           }}
-          placeholder="What's on your mind?"
+          placeholder="What's on your mind? Your cast will be published through 33bits account."
           fullWidth
         />
 
