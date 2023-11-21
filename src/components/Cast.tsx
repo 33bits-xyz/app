@@ -48,10 +48,9 @@ export default function Cast({
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
-  const [response, setResponse] = useState<boolean | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const [proofGenerationWarningVisible, setProofGenerationWarningVisible] = useState<boolean>(true);
-
-  const dispatch = useDispatch();
 
   const cast = async (): Promise<any> => {
     setLoadingMessage('Fetching Farcaster FIDs tree...');
@@ -100,27 +99,6 @@ export default function Cast({
     const proof = await noir.generateFinalProof(input);
     console.log(proof);
 
-    // const timestamp = Buffer.from(proof.publicInputs[0]).toString('hex');
-    // const note_root = Buffer.from(proof.publicInputs[1]).toString('hex');
-    // console.log('timestamp');
-    // console.log(timestamp);
-    // console.log('note root');
-    // console.log(note_root);
-
-    // setLoadingMessage('Verifying the proof...');
-
-    // console.log('verifying proof');
-    // const verification = await noir.verifyFinalProof(proof);
-
-    // if (!verification) {
-    //   throw new Error('Proof verification failed');
-    // }
-
-    // const proof_string = JSON.stringify({
-    //   proof: Array.from(proof.proof),
-    //   publicInputs: proof.publicInputs.map(i => Array.from(i))
-    // });
-
     setLoadingMessage('Verifying the zk proof and sending your cast. Please keep this tab open.');
 
     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/farcaster/cast`, {
@@ -129,14 +107,10 @@ export default function Cast({
     });
 
     console.log(response);
-
-    // dispatch(addMessageUuid(response.data.uuid));
   };
 
   return (
     <>
-      {/* <p>Hello, {userFid}</p> */}
-
       <div className="textarea-container">
         <TextInput
           id="textArea"
@@ -163,18 +137,21 @@ export default function Cast({
               disabled={loading || message.length === 0}
               onClick={() => {
                 setLoading(true);
-                setResponse(null);
+                setSuccess(false);
+                setError(null);
                 setProofGenerationWarningVisible(false);
     
                 cast()
                   .then(() => {
-                    setResponse(true);
+                    setSuccess(true);
                     setMessage("");
                   })
                   .catch((e) => {
-                    console.log('error');
-                    console.log(e);
-                    setResponse(false);
+                    if (axios.isAxiosError(e)) {
+                      setError(`${e.message} [${e.config?.url}]`)
+                    } else {
+                      setError(e.message);
+                    }
                   })
                   .finally(() => {
                     setLoading(false);
@@ -211,16 +188,19 @@ export default function Cast({
       }
 
       {
-        response === true &&
+        success === true &&
         (
           <p>Your cast was published successfully. View it on <Anchor target="_blank" href="https://warpcast.com/33bits">@33bits</Anchor>.</p>
         )
       }
 
       {
-        response === false &&
+        error !== null &&
         (
-          <p>Something went wrong. Please, try casting again.</p>
+          <>
+            <p>Something went wrong. Please, try casting again.</p>
+            <p style={{ wordBreak: 'break-all' }} className="text-danger">{ error }</p>
+          </>
         )
       }
 
