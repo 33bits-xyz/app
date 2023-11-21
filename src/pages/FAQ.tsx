@@ -21,6 +21,16 @@ export default function FAQ() {
                 Eligibility for posting on 33bits is exclusive to Farcaster accounts with FID ≤ 10001.
             </p>
 
+            <Separator className="my-3"/>
+
+            <p>- Why does it take time to cast?</p>
+            <br />
+            <p>
+                Generating and verifying zk proofs is a complex task.
+                It demands complex computations and significant memory usage.
+                For more technical details, please refer to our { <Anchor href="https://github.com/33bits-xyz/app" target="_blank">Github repo</Anchor> }.
+            </p>
+
             <Separator className="my-3" />
             <p>- What is proof verification?</p>
             <br />
