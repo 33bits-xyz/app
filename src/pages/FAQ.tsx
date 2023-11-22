@@ -28,7 +28,7 @@ export default function FAQ() {
             <p>
                 Generating and verifying zk proofs is a complex task.
                 It demands complex computations and significant memory usage.
-                For more technical details, please refer to our { <Anchor href="https://github.com/33bits-xyz/app" target="_blank">Github repo</Anchor> }.
+                For more technical details, please refer to our { <Anchor href="https://github.com/33bits-xyz" target="_blank">Github repo</Anchor> }.
             </p>
 
             <Separator className="my-3" />
@@ -42,7 +42,7 @@ export default function FAQ() {
                 The entire process, including authentication and proof generation, occurs in the user's browser, keeping their FID private.
                 Once the proof is created, it's verified on the app's backend.
                 If the proof is valid, the user's cast is sent through the API to the @33bits account and published on the feed anonymously.
-                For more tech details, please refer to the { <Anchor href="https://github.com/33bits-xyz/app" target="_blank">Github</Anchor> }.
+                For more tech details, please refer to the { <Anchor href="https://github.com/33bits-xyz" target="_blank">Github</Anchor> }.
             </p>
 
             <Separator className="my-3" />
