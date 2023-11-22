@@ -55,6 +55,17 @@ export default function Cast({
   const cast = async (): Promise<any> => {
     setLoadingMessage('Fetching Farcaster FIDs tree...');
 
+    // Check FID is whitelisted
+    const {
+      data: {
+        whitelist
+      }
+    } = await axios(`${import.meta.env.VITE_API_BASE_URL}/farcaster/whitelist`);
+
+    if (userFid > 10001 && !whitelist.includes(userFid)) {
+      throw new Error(`It appears that your FID (Farcaster ID) is greater than 10001. Unfortunately, the first version of 33bits is only accessible to accounts with an FID of 10001 or lower.`);
+    }
+
     // @ts-ignore
     const backend = new BarretenbergBackend(circuit);
     // @ts-ignore
