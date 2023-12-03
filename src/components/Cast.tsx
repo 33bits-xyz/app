@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Anchor, Button, Hourglass, ProgressBar, TextInput } from "react95";
+import { Anchor, Button, Checkbox, Hourglass, ProgressBar, TextInput } from "react95";
 import { get_public_key } from "../utils/keygen";
 import { Buffer } from "buffer"; 
 import './inputs.css';
@@ -126,7 +126,7 @@ export default function Cast({
         <TextInput
           id="textArea"
           multiline
-          rows={6}
+          rows={8}
           value={message}
           disabled={loading}
           onChange={(e) => {
@@ -139,6 +139,12 @@ export default function Cast({
         <div id="counter" className={message.length >= MAX_LENGTH * 0.9 ? 'counter text-danger' : 'counter'}>
           { message.length } / { MAX_LENGTH }
         </div>
+
+        <Checkbox
+          name='shipping'
+          value='shipping'
+          label='Reply to a cast'
+        />
       </div>
 
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">

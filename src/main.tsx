@@ -8,7 +8,7 @@ import App from './App.tsx'
 import { Provider } from 'react-redux';
 import store from './redux/store';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-flexbox-grid/dist/react-flexbox-grid.css';
 import './App.css';
 import '@react95/icons/icons.css';
 

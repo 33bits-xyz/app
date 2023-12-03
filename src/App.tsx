@@ -1,13 +1,5 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  Route,
-  Routes
-} from 'react-router-dom';
-
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 import { Button, Monitor, Tab, TabBody, Tabs, Window, WindowContent, WindowHeader } from 'react95';
 
@@ -15,6 +7,8 @@ import Main from './pages/Main';
 import FAQ from './pages/FAQ';
 import Settings from './pages/Settings';
 import { Verify } from './pages/Verify';
+
+import { Grid, Row, Col } from 'react-flexbox-grid';
 
 
 export default function App() {
@@ -25,9 +19,18 @@ export default function App() {
   const activeTab = location.pathname.replace('/', '');
 
   return (
-    <Container fluid>
-      <Row className='pt-5 pb-5 justify-content-md-center'>
-        <Col xs={12} lg={4}>
+    <Grid fluid>
+      <Row className='pt-5'>
+        <Col
+          xs={12}
+          xsOffset={0}
+          sm={8}
+          smOffset={2}
+          lg={4}
+          lgOffset={4}
+          md={8}
+          mdOffset={2}
+        >
           <Window className='window' style={{ width: '100%' }}>
             <WindowHeader>
               <span>33bits.exe</span>
@@ -76,6 +79,6 @@ export default function App() {
           </Window>
         </Col>
       </Row>
-    </Container>
+    </Grid>
   );
 };

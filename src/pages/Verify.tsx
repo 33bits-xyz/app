@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import { Anchor, Button, Hourglass, TextInput } from "react95";
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-
 import axios from "axios";
 import moment from 'moment';
 import { verify } from "@noble/ed25519";
 
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import circuit from './../../circuits/target/main.json';
 import Link33bits from "../components/Link_33bits";
@@ -87,7 +84,7 @@ export function Verify() {
   }
 
   return (
-    <Container fluid>
+    <Grid fluid>
       <Row className="pb-3">
         <Col>
           <p>
@@ -185,6 +182,6 @@ export function Verify() {
           </>
         )
       }
-    </Container>
+    </Grid>
   );
 }
