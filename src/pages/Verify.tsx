@@ -9,7 +9,8 @@ import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
-import circuit from './../../circuits/target/main.json';
+import circuit_v0 from './../../circuits/v0/target/main.json';
+import circuit_v1 from './../../circuits/v1/target/main.json';
 import Link33bits from "../components/Link_33bits";
 
 
@@ -60,9 +61,9 @@ export function Verify() {
     
         // Verify proof
         // @ts-ignore
-        const backend = new BarretenbergBackend(circuit);
+        const backend = new BarretenbergBackend(circuit_v0);
         // @ts-ignore
-        const noir = new Noir(circuit, backend);
+        const noir = new Noir(circuit_v0, backend);
     
         await backend.instantiate();
         await backend['api'].acirInitProvingKey(

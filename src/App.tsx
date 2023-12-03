@@ -20,7 +20,7 @@ export default function App() {
 
   return (
     <Grid fluid>
-      <Row className='pt-5'>
+      <Row className='py-5'>
         <Col
           xs={12}
           xsOffset={0}
@@ -39,7 +39,7 @@ export default function App() {
             <WindowContent>
               {
                 maintenance && (
-                  <div className='text-center'>
+                  <div style={{ textAlign: 'center' }}>
                     <Monitor backgroundStyles={{ background: 'blue' }} ></Monitor>
                     <p className='mt-5'>
                       33bits is currently under maintenance, come back later.

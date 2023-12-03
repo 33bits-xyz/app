@@ -7,12 +7,10 @@ import './inputs.css';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
 
-import circuit from './../../circuits/target/main.json';
+import circuit from './../../circuits/v1/target/main.json';
 
 import axios from "axios";
 import { stringToHexArray } from "../utils/string";
-import { useDispatch } from "react-redux";
-// import { addMessageUuid } from "../redux/authSlice";
 
 
 const MAX_LENGTH = 320;
@@ -48,12 +46,31 @@ export default function Cast({
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
+  const [isReply, setIsReply] = useState<boolean>(false);
+  const [replyLink, setReplyLink] = useState<string>("");
   const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [proofGenerationWarningVisible, setProofGenerationWarningVisible] = useState<boolean>(true);
 
   const cast = async (): Promise<any> => {
     setLoadingMessage('Fetching Farcaster FIDs tree...');
+
+    let reply_cast_id = '';
+
+    // Fetch reply farcaster hash if provided
+    if (isReply && replyLink.length > 0) {
+      const replyLinkBase64 = Buffer.from(replyLink).toString('base64');
+
+      try {
+        const {
+          data
+        } = await axios(`${import.meta.env.VITE_API_BASE_URL}/farcaster/warpcast/${replyLinkBase64}`);  
+
+        reply_cast_id = data.cast_id;
+      } catch (e) {
+        throw new Error(`Could not find a cast with the provided link. Please, try again.`);
+      }
+    }
 
     // Check FID is whitelisted
     const {
@@ -97,7 +114,8 @@ export default function Cast({
       index: nodeIndex,
       note_hash_path: node.path,
       timestamp: Math.floor(Date.now() / 1000),
-      message: stringToHexArray(message),
+      message: stringToHexArray(message, 16),
+      reply: stringToHexArray(reply_cast_id, 4),
     };
 
     console.log('input');
@@ -121,7 +139,7 @@ export default function Cast({
   };
 
   return (
-    <>
+    <>    
       <div className="textarea-container">
         <TextInput
           id="textArea"
@@ -139,19 +157,34 @@ export default function Cast({
         <div id="counter" className={message.length >= MAX_LENGTH * 0.9 ? 'counter text-danger' : 'counter'}>
           { message.length } / { MAX_LENGTH }
         </div>
-
-        <Checkbox
-          name='shipping'
-          value='shipping'
-          label='Reply to a cast'
-        />
       </div>
+
+      <Checkbox
+        className="my-3"
+        name='shipping'
+        value='shipping'
+        label='Reply to a cast'
+        disabled={loading}
+        onChange={(e) => {
+          setIsReply(e.target.checked);
+        }}
+      />
+
+      <TextInput
+        disabled={!isReply || loading}
+        value={replyLink}
+        onChange={(e) => {
+          setReplyLink(e.target.value);
+        }}
+        className="mb-3"
+        placeholder="Paste link to a cast"
+      />
 
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
         {
           loading === false && (
             <Button
-              disabled={loading || message.length === 0}
+              disabled={loading || message.length === 0 || (isReply && replyLink.length === 0)}
               onClick={() => {
                 setLoading(true);
                 setSuccess(false);
@@ -162,13 +195,10 @@ export default function Cast({
                   .then(() => {
                     setSuccess(true);
                     setMessage("");
+                    setReplyLink("");
                   })
                   .catch((e) => {
-                    if (axios.isAxiosError(e)) {
-                      setError(`${e.message} [${e.config?.url}]`)
-                    } else {
-                      setError(e.message);
-                    }
+                    setError(e.message);
                   })
                   .finally(() => {
                     setLoading(false);
@@ -215,7 +245,7 @@ export default function Cast({
         error !== null &&
         (
           <>
-            <p>Something went wrong. Please, try casting again.</p>
+            {/* <p>Something went wrong. Please, try casting again.</p> */}
             <p style={{ wordBreak: 'break-all' }} className="text-danger">{ error }</p>
           </>
         )

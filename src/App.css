@@ -53,3 +53,13 @@ html, body, #root, .App {
   justify-content: center;
 }
 
+
+/* Text Danger Class */
+.text-danger {
+  color: #ff0000; /* Red color */
+}
+
+/* Text Success Class */
+.text-success {
+  color: #00cc00; /* Green color */
+}

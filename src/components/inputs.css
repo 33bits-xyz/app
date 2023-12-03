@@ -17,7 +17,7 @@ textarea {
 
 .counter {
   position: absolute;
-  bottom: 40px;
+  bottom: 10px;
   right: 10px;
   color: #666;
   font-size: 14px;
