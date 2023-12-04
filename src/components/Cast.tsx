@@ -177,7 +177,7 @@ export default function Cast({
           setReplyLink(e.target.value);
         }}
         className="mb-3"
-        placeholder="Paste link to a cast"
+        placeholder="Paste the link to the cast"
       />
 
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
