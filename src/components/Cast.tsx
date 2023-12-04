@@ -159,11 +159,11 @@ export default function Cast({
         </div>
       </div>
 
-      {/* <Checkbox
+      <Checkbox
         className="my-3"
         name='shipping'
         value='shipping'
-        label='Reply to a cast'
+        label='Reply to any cast from 33bits account'
         disabled={loading}
         onChange={(e) => {
           setIsReply(e.target.checked);
@@ -178,7 +178,7 @@ export default function Cast({
         }}
         className="mb-3"
         placeholder="Paste link to a cast"
-      /> */}
+      />
 
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
         {
@@ -198,7 +198,13 @@ export default function Cast({
                     setReplyLink("");
                   })
                   .catch((e) => {
-                    setError(e.message);
+                    console.log(e);
+
+                    if (axios.isAxiosError(e)) {
+                      setError(e.response?.data?.message);
+                    } else {
+                      setError(e.message);
+                    }
                   })
                   .finally(() => {
                     setLoading(false);
