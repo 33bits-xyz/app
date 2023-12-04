@@ -163,7 +163,7 @@ export default function Cast({
         className="my-3"
         name='shipping'
         value='shipping'
-        label='Reply to any cast from 33bits account'
+        label='Reply to a cast from 33bits account'
         disabled={loading}
         onChange={(e) => {
           setIsReply(e.target.checked);
