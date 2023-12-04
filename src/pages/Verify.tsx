@@ -49,7 +49,35 @@ export function Verify() {
     // If a match is found, return it; otherwise return null
     return match ? match[0] : null;
   };
-  
+
+  const verifyProof = async (message: Message): Promise<boolean> => {
+    const versions = {
+      0: circuit_v0,
+      1: circuit_v1
+    };
+
+    // @ts-ignore
+    const circuit = versions[message.version];
+
+    if (circuit === undefined) {
+      throw new Error(`Unknown circuit version: ${message.version}`);
+    }
+
+    // @ts-ignore
+    const backend = new BarretenbergBackend(circuit);
+    // @ts-ignore
+    const noir = new Noir(circuit, backend);
+
+    await backend.instantiate();
+    await backend['api'].acirInitProvingKey(
+      backend['acirComposer'],
+      backend['acirUncompressedBytecode']
+    );
+
+    // @ts-ignore/
+    return noir.verifyFinalProof(message.proof);
+  }
+
   const fetch = async (): Promise<any> => {
     const farcaster_hash = extractFarcasterHash(query);
 
@@ -58,21 +86,9 @@ export function Verify() {
     await axios.get(`${import.meta.env.VITE_API_BASE_URL}/farcaster/farcaster_hash/${farcaster_hash}`)
       .then(async ({ data }) => {
         setLoadingText('Verifying the proof...');
-    
+
         // Verify proof
-        // @ts-ignore
-        const backend = new BarretenbergBackend(circuit_v0);
-        // @ts-ignore
-        const noir = new Noir(circuit_v0, backend);
-    
-        await backend.instantiate();
-        await backend['api'].acirInitProvingKey(
-          backend['acirComposer'],
-          backend['acirUncompressedBytecode']
-        );
-    
-        // @ts-ignore/
-        const verification = await noir.verifyFinalProof(data.proof);
+        const verification = await verifyProof(data);
     
         if (verification) {
           setMessage(data);
@@ -145,9 +161,9 @@ export function Verify() {
 
       {
         loadingText != null && (
-          <Row className="text-center">
+          <Row>
             <Col className="pt-2">
-              <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
+              <div className="my-2 d-flex align-items-center justify-content-center w-100">
                 <Hourglass size={32} style={{ margin: 10 }} />
 
                 <p>{ loadingText }</p>
