@@ -159,7 +159,7 @@ export default function Cast({
         </div>
       </div>
 
-      <Checkbox
+      {/* <Checkbox
         className="my-3"
         name='shipping'
         value='shipping'
@@ -178,7 +178,7 @@ export default function Cast({
         }}
         className="mb-3"
         placeholder="Paste link to a cast"
-      />
+      /> */}
 
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
         {
