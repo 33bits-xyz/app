@@ -9,6 +9,7 @@ import Settings from './pages/Settings';
 import { Verify } from './pages/Verify';
 
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import SelectChannel from './components/SelectChannel';
 
 
 export default function App() {
@@ -31,52 +32,56 @@ export default function App() {
           md={8}
           mdOffset={2}
         >
-          <Window className='window' style={{ width: '100%' }}>
-            <WindowHeader>
-              <span>33bits.exe</span>
-            </WindowHeader>
+          <div style={{ position: 'relative' }}>
+            <Window className='window' style={{ width: '100%', zIndex: 1 }}>
+              <WindowHeader>
+                <span>33bits.exe</span>
+              </WindowHeader>
 
-            <WindowContent>
-              {
-                maintenance && (
-                  <div style={{ textAlign: 'center' }}>
-                    <Monitor backgroundStyles={{ background: 'blue' }} ></Monitor>
-                    <p className='mt-5'>
-                      33bits is currently under maintenance, come back later.
-                    </p>
-                  </div>
-                )
-              }
+              <WindowContent>
+                {
+                  maintenance && (
+                    <div style={{ textAlign: 'center' }}>
+                      <Monitor backgroundStyles={{ background: 'blue' }} ></Monitor>
+                      <p className='mt-5'>
+                        33bits is currently under maintenance, come back later.
+                      </p>
+                    </div>
+                  )
+                }
 
-              {
-                !maintenance && (
-                  <>
-                    <Tabs value={activeTab} onChange={(page) => navigate('/' + page)}>
-                      <Tab value={''}>Cast</Tab>
-                      <Tab value={'settings'}>Settings</Tab>
-                      <Tab value={'verify'}>Verify</Tab>
-                      <Tab value={'faq'}>FAQ</Tab>
-                    </Tabs>
-      
-                    <TabBody>
-                      <div style={{ display: activeTab === '' ? 'block' : 'none' }}>
-                        <Main />
-                      </div>
-                      <div style={{ display: activeTab === 'settings' ? 'block' : 'none' }}>
-                        <Settings />
-                      </div>
-                      <div style={{ display: activeTab === 'verify' ? 'block' : 'none' }}>
-                        <Verify />
-                      </div>
-                      <div style={{ display: activeTab === 'faq' ? 'block' : 'none' }}>
-                        <FAQ />
-                      </div>
-                    </TabBody>
-                  </>
-                )
-              }
-            </WindowContent>
-          </Window>
+                {
+                  !maintenance && (
+                    <>
+                      <Tabs value={activeTab} onChange={(page) => navigate('/' + page)}>
+                        <Tab value={''}>Cast</Tab>
+                        <Tab value={'settings'}>Settings</Tab>
+                        <Tab value={'verify'}>Verify</Tab>
+                        <Tab value={'faq'}>FAQ</Tab>
+                      </Tabs>
+        
+                      <TabBody>
+                        <div style={{ display: activeTab === '' ? 'block' : 'none' }}>
+                          <Main />
+                        </div>
+                        <div style={{ display: activeTab === 'settings' ? 'block' : 'none' }}>
+                          <Settings />
+                        </div>
+                        <div style={{ display: activeTab === 'verify' ? 'block' : 'none' }}>
+                          <Verify />
+                        </div>
+                        <div style={{ display: activeTab === 'faq' ? 'block' : 'none' }}>
+                          <FAQ />
+                        </div>
+                      </TabBody>
+                    </>
+                  )
+                }
+              </WindowContent>
+            </Window>
+
+            <SelectChannel />
+          </div>
         </Col>
       </Row>
     </Grid>

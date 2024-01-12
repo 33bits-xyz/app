@@ -15,6 +15,7 @@ import axios from "axios";
 
 export default function Main() {
   const dispatch = useDispatch();
+
   const privateKey = useSelector((state: RootState) => state.auth.privateKey);
   const signedKeyResponse = useSelector((state: RootState) => state.auth.signedKeyResponse);
   const userFid = useSelector((state: RootState) => state.auth.userFid);

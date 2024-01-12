@@ -11,6 +11,7 @@ import circuit from './../../circuits/v1/target/main.json';
 
 import axios from "axios";
 import { stringToHexArray } from "../utils/string";
+import SelectChannel from "./SelectChannel";
 
 
 const MAX_LENGTH = 320;
@@ -51,6 +52,7 @@ export default function Cast({
   const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [proofGenerationWarningVisible, setProofGenerationWarningVisible] = useState<boolean>(true);
+  const [selectChannelModalVisible, setSelectChannelModalVisible] = useState<boolean>(false);
 
   const cast = async (): Promise<any> => {
     setLoadingMessage('Fetching Farcaster FIDs tree...');
@@ -139,7 +141,11 @@ export default function Cast({
   };
 
   return (
-    <>    
+    <>
+      {/* <div style={{ display: selectChannelModalVisible ? 'block' : 'none' }}>
+        <SelectChannel />
+      </div> */}
+
       <div className="textarea-container">
         <TextInput
           id="textArea"
@@ -179,6 +185,12 @@ export default function Cast({
         className="mb-3"
         placeholder="Paste the link to the cast"
       />
+
+      <Button onClick={() => {
+        setSelectChannelModalVisible(true);
+      }}>
+        Select channel
+      </Button>
 
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
         {
@@ -251,18 +263,10 @@ export default function Cast({
         error !== null &&
         (
           <>
-            {/* <p>Something went wrong. Please, try casting again.</p> */}
             <p style={{ wordBreak: 'break-all' }} className="text-danger">{ error }</p>
           </>
         )
       }
-
-      {/* {
-        userFid > 10000 && 
-        (
-          <p>Currently only first 10k Farcaster users are allowed to cast. Stay in touch, we'll remove the whitelist soon!</p>
-        )
-      } */}
     </>
   );
 }
