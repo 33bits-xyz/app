@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 
 import 'react-flexbox-grid/dist/react-flexbox-grid.css';
-import './App.css';
+import './styles/App.css';
 import '@react95/icons/icons.css';
 
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
@@ -51,6 +51,39 @@ const Wrapper = styled.div`
   background: ${({ theme }) => theme.desktopBackground};
   min-height: 100vh;
   a:visited { color: LinkText; }
+  .window-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .close-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: -1px;
+    margin-top: -1px;
+    transform: rotateZ(45deg);
+    position: relative;
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      background: ${({ theme }) => theme.materialText};
+    }
+    &:before {
+      height: 100%;
+      width: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    &:after {
+      height: 3px;
+      width: 100%;
+      left: 0px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
 `;
 
 

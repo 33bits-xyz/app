@@ -3,13 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 import { Button, Monitor, Tab, TabBody, Tabs, Window, WindowContent, WindowHeader } from 'react95';
 
-import Main from './pages/Main';
+import Cast from './pages/Cast';
+import Reply from './pages/Reply';
 import FAQ from './pages/FAQ';
 import Settings from './pages/Settings';
 import { Verify } from './pages/Verify';
 
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import SelectChannel from './components/SelectChannel';
 
 
 export default function App() {
@@ -55,6 +55,7 @@ export default function App() {
                     <>
                       <Tabs value={activeTab} onChange={(page) => navigate('/' + page)}>
                         <Tab value={''}>Cast</Tab>
+                        <Tab value={'reply'}>Reply</Tab>
                         <Tab value={'settings'}>Settings</Tab>
                         <Tab value={'verify'}>Verify</Tab>
                         <Tab value={'faq'}>FAQ</Tab>
@@ -62,7 +63,10 @@ export default function App() {
         
                       <TabBody>
                         <div style={{ display: activeTab === '' ? 'block' : 'none' }}>
-                          <Main />
+                          <Cast />
+                        </div>
+                        <div style={{ display: activeTab === 'reply' ? 'block' : 'none' }}>
+                          <Reply />
                         </div>
                         <div style={{ display: activeTab === 'settings' ? 'block' : 'none' }}>
                           <Settings />
@@ -79,8 +83,6 @@ export default function App() {
                 }
               </WindowContent>
             </Window>
-
-            <SelectChannel />
           </div>
         </Col>
       </Row>

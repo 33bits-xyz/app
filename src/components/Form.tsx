@@ -2,57 +2,38 @@ import React, { useEffect, useState } from "react";
 import { Anchor, Button, Checkbox, Hourglass, ProgressBar, TextInput } from "react95";
 import { get_public_key } from "../utils/keygen";
 import { Buffer } from "buffer"; 
-import './inputs.css';
+import './../styles/inputs.css';
 
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
 
-import circuit from './../../circuits/v1/target/main.json';
+import circuit from '../../circuits/v1/target/main.json';
 
 import axios from "axios";
 import { stringToHexArray } from "../utils/string";
 import SelectChannel from "./SelectChannel";
+import { MAX_MESSAGE_LENGTH, sleep } from "../utils/common";
+import { CastMode, Channel } from "../types";
 
 
-const MAX_LENGTH = 320;
-
-
-function stringToPaddedByteArray(input: string): Uint8Array {
-  // Convert the string to an array of bytes
-  const encoder = new TextEncoder();
-  const byteArray = encoder.encode(input);
-
-  // Create a new Uint8Array of size 256
-  const paddedArray = new Uint8Array(256);
-
-  // Copy the original bytes into the new array
-  paddedArray.set(byteArray);
-
-  // Return the padded array
-  return paddedArray;
-}
-
-const sleep = (ms: number) => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-
-export default function Cast({
+export default function Form({
   userFid,
-  privateKey
+  privateKey,
+  mode
 }: {
   userFid: number,
-  privateKey: string
+  privateKey: string,
+  mode: CastMode
 }) {
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
-  const [isReply, setIsReply] = useState<boolean>(false);
   const [replyLink, setReplyLink] = useState<string>("");
   const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [proofGenerationWarningVisible, setProofGenerationWarningVisible] = useState<boolean>(true);
   const [selectChannelModalVisible, setSelectChannelModalVisible] = useState<boolean>(false);
+  const [channel, setChannel] = useState<Channel | null>(null);
 
   const cast = async (): Promise<any> => {
     setLoadingMessage('Fetching Farcaster FIDs tree...');
@@ -60,7 +41,7 @@ export default function Cast({
     let reply_cast_id = '';
 
     // Fetch reply farcaster hash if provided
-    if (isReply && replyLink.length > 0) {
+    if (replyLink.length > 0) {
       const replyLinkBase64 = Buffer.from(replyLink).toString('base64');
 
       try {
@@ -100,7 +81,6 @@ export default function Cast({
     const nodeIndex = tree.elements.findIndex((x: any) => x.key === publicKey);
 
     if (nodeIndex === -1) {
-      console.log('not found, sleeping');
       await sleep(5000);
 
       return cast();
@@ -120,33 +100,34 @@ export default function Cast({
       reply: stringToHexArray(reply_cast_id, 4),
     };
 
-    console.log('input');
-    console.log(input);
-
-    console.log('generating proof');
-
     setLoadingMessage('Hold on, generating the zk proof…');
 
     const proof = await noir.generateFinalProof(input);
-    console.log(proof);
 
     setLoadingMessage('Verifying the zk proof and sending your cast. Please keep this tab open.');
 
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/farcaster/cast`, {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/farcaster/cast`, {  
       proof: Array.from(proof.proof),
-      publicInputs: proof.publicInputs.map(i => Array.from(i))
+      publicInputs: proof.publicInputs.map(i => Array.from(i)),
+      channel: channel === null ? null : channel.channel.id,
     });
-
-    console.log(response);
   };
 
   return (
     <>
-      {/* <div style={{ display: selectChannelModalVisible ? 'block' : 'none' }}>
-        <SelectChannel />
-      </div> */}
+      <div style={{ display: selectChannelModalVisible ? 'block' : 'none' }}>
+        <SelectChannel
+          onClose={() => {
+            setSelectChannelModalVisible(false);
+          }}
+          onChoose={(channel) => {
+            setChannel(channel);
+            setSelectChannelModalVisible(false);
+          }}
+        />
+      </div>
 
-      <div className="textarea-container">
+      <div className="textarea-container mb-3">
         <TextInput
           id="textArea"
           multiline
@@ -154,49 +135,54 @@ export default function Cast({
           value={message}
           disabled={loading}
           onChange={(e) => {
-            setMessage(e.target.value.slice(0, MAX_LENGTH));
+            setMessage(e.target.value.slice(0, MAX_MESSAGE_LENGTH));
           }}
           placeholder="What's on your mind? Your cast will be published through 33bits account."
           fullWidth
         />
 
-        <div id="counter" className={message.length >= MAX_LENGTH * 0.9 ? 'counter text-danger' : 'counter'}>
-          { message.length } / { MAX_LENGTH }
+        <div id="counter" className={message.length >= MAX_MESSAGE_LENGTH * 0.9 ? 'counter text-danger' : 'counter'}>
+          { message.length } / { MAX_MESSAGE_LENGTH }
         </div>
       </div>
 
-      <Checkbox
-        className="my-3"
-        name='shipping'
-        value='shipping'
-        label='Reply to a cast'
-        disabled={loading}
-        onChange={(e) => {
-          setIsReply(e.target.checked);
-        }}
-      />
+      {
+        mode === CastMode.Reply && (
+          <TextInput
+            disabled={loading}
+            value={replyLink}
+            onChange={(e) => {
+              setReplyLink(e.target.value);
+            }}
+            className="mb-3"
+            placeholder="Paste the link to the cast"
+          />
+        )
+      }
 
-      <TextInput
-        disabled={!isReply || loading}
-        value={replyLink}
-        onChange={(e) => {
-          setReplyLink(e.target.value);
-        }}
-        className="mb-3"
-        placeholder="Paste the link to the cast"
-      />
-
-      <Button onClick={() => {
-        setSelectChannelModalVisible(true);
-      }}>
-        Select channel
-      </Button>
+      {
+        mode === CastMode.Cast && (
+          <Button onClick={() => {
+            if (channel === null) {
+              setSelectChannelModalVisible(true);
+            } else {
+              setChannel(null);
+            }
+          }}>
+            { channel === null ? 'Select channel' : `${channel.channel.name} ❌`}
+          </Button>
+        )
+      }
 
       <div className="mt-3 mb-3 d-flex align-items-center justify-content-center w-100">
         {
-          loading === false && (
+          (
             <Button
-              disabled={loading || message.length === 0 || (isReply && replyLink.length === 0)}
+              disabled={
+                loading ||
+                message.length === 0 ||
+                (mode === CastMode.Reply && replyLink.length === 0)
+              }
               onClick={() => {
                 setLoading(true);
                 setSuccess(false);
@@ -224,7 +210,7 @@ export default function Cast({
               }}
               primary
               size="lg"
-            >✨ Cast ✨</Button>
+            >{ mode === CastMode.Cast ? '✨ Cast ✨' : '✨ Reply ✨' }</Button>
           )
         }
       </div>

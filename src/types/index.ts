@@ -1,8 +1,13 @@
 enum SignedKeyState {
-    PENDING = 'pending',
-    APPROVED = 'approved',
-    COMPLETED = 'completed',
-  }
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  COMPLETED = 'completed',
+}
+
+export enum CastMode {
+  Reply = 'reply',
+  Cast = 'cast',
+}
   
 interface SignedKeyRequestResponse {
     deeplinkUrl: string;
@@ -18,4 +23,14 @@ interface SignedKeyRequest {
   requestFid: number;
   deadline: number;
   signature: string;
+}
+
+
+export interface Channel {
+  cast_count_30d: string;
+  channel: {
+    description: string;
+    id: string;
+    name: string;
+  }
 }

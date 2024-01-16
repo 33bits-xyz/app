@@ -5,15 +5,15 @@ import Loader from "../components/Loader";
 import { useSelector, useDispatch } from 'react-redux';
 import { setPrivateKey, setSignedKeyResponse } from '../redux/authSlice';
 import { RootState } from '../redux/store';
-import { generate_private_key, get_public_key } from "../utils/keygen";
-import { generate_signed_key_request } from "../utils/warpcast";
+import { generate_private_key, setupSignedKeyResponse } from "../utils/keygen";
 
 import ConnectWarpcaster from "../components/ConnectWarpcaster";
-import Cast from "../components/Cast";
+import Form from "../components/Form";
 import axios from "axios";
+import { CastMode } from "../types";
 
 
-export default function Main() {
+export default function Cast() {
   const dispatch = useDispatch();
 
   const privateKey = useSelector((state: RootState) => state.auth.privateKey);
@@ -27,30 +27,9 @@ export default function Main() {
   useEffect(() => {
     if (signedKeyResponse !== null || privateKey === null) return;
 
-    const setupSignedKeyResponse = async () => {
-      const publicKey = await get_public_key(privateKey);
-
-      const {
-        data: {
-          signature,
-          deadline,
-          fid
-        }
-      } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/farcaster/sign_public_key`, {
-        public_key: publicKey
-      });
-
-      const response = await generate_signed_key_request(
-        publicKey,
-        deadline,
-        signature,
-        fid
-      );
-
+    setupSignedKeyResponse(privateKey).then((response) => {
       dispatch(setSignedKeyResponse(response));
-    };
-
-    setupSignedKeyResponse(); 
+    }); 
   }, [privateKey]);
 
   if (privateKey === null || signedKeyResponse === null) {
@@ -62,6 +41,10 @@ export default function Main() {
   }
 
   return (
-    <Cast privateKey={privateKey} userFid={userFid} />
+    <Form
+      privateKey={privateKey}
+      userFid={userFid}
+      mode={CastMode.Cast}
+    />
   );
 }
