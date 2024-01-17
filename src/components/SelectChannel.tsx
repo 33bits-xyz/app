@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { useDebounce } from 'use-debounce';
+import { useDebounce, useDebouncedCallback } from 'use-debounce';
 
 import { Avatar, Button, ScrollView, Table, TableBody, TableDataCell, TableHead, TableHeadCell, TableRow, TextInput, Window, WindowContent, WindowHeader } from 'react95';
 import Loader from "./Loader";
 import axios from "axios";
+import { Channel } from "../types";
 
 
 export default function SelectChannel({
@@ -13,8 +14,17 @@ export default function SelectChannel({
   onClose: () => void,
   onChoose: (channel: Channel) => void
 }) {
-  const [query, setQuery] = React.useState('');
   const [channels, setChannels] = React.useState<Channel[]>([]);
+  const [filteredChannels, setFilteredChannels] = React.useState<Channel[]>([]);
+
+  const debounced = useDebouncedCallback(
+    (value) => {
+      setFilteredChannels(
+        channels.filter((channel) => channel.channel.name.toLowerCase().includes(value.toLowerCase()))
+      )
+    },
+    500
+  );
 
   const loadTrendingChannels = async (): Promise<Channel[]> => {
     const {
@@ -34,6 +44,7 @@ export default function SelectChannel({
     const channels = await loadTrendingChannels();
 
     setChannels(channels);
+    setFilteredChannels(channels);
   };
 
   useEffect(() => {
@@ -51,7 +62,7 @@ export default function SelectChannel({
 
       <TableBody>
         {
-          channels.map((channel) => {
+          filteredChannels.map((channel) => {
             return (
               <TableRow key={channel.channel.id} onClick={() => {
                 onChoose(channel);
@@ -89,7 +100,7 @@ export default function SelectChannel({
         <div style={{ display: 'flex' }}>
           <TextInput
             onChange={(e) => {
-              setQuery(e.target.value);
+              debounced(e.target.value);
             }}
             className="mb-3"
             placeholder="Search..."
@@ -97,9 +108,19 @@ export default function SelectChannel({
           />
         </div>
 
-        <ScrollView style={{ height: '60vh' }}>
-          { channelsRows }
-        </ScrollView>
+        {
+          channels.length === 0 && (
+            <Loader/>
+          )
+        }
+
+        {
+          channels.length > 0 && (
+            <ScrollView style={{ height: '60vh' }}>
+              { channelsRows }
+            </ScrollView>
+          )
+        }
       </WindowContent>
     </Window>
   );

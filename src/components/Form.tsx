@@ -194,6 +194,7 @@ export default function Form({
                     setSuccess(true);
                     setMessage("");
                     setReplyLink("");
+                    setChannel(null);
                   })
                   .catch((e) => {
                     console.log(e);
