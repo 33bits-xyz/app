@@ -8,8 +8,7 @@ import { RootState } from '../redux/store';
 import { generate_private_key, setupSignedKeyResponse } from "../utils/keygen";
 
 import ConnectWarpcaster from "../components/ConnectWarpcaster";
-import Form from "../components/Form";
-import { CastMode } from "../types";
+import Form, { CastMode } from "../components/Form";
 
 
 export default function Reply() {

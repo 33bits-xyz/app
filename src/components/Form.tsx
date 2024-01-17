@@ -13,7 +13,12 @@ import axios from "axios";
 import { stringToHexArray } from "../utils/string";
 import SelectChannel from "./SelectChannel";
 import { MAX_MESSAGE_LENGTH, sleep } from "../utils/common";
-import { CastMode, Channel } from "../types";
+
+
+export enum CastMode {
+  Reply = 'reply',
+  Cast = 'cast',
+}
 
 
 export default function Form({

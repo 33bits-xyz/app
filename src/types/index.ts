@@ -4,10 +4,6 @@ enum SignedKeyState {
   COMPLETED = 'completed',
 }
 
-export enum CastMode {
-  Reply = 'reply',
-  Cast = 'cast',
-}
   
 interface SignedKeyRequestResponse {
     deeplinkUrl: string;
@@ -26,7 +22,7 @@ interface SignedKeyRequest {
 }
 
 
-export interface Channel {
+interface Channel {
   cast_count_30d: string;
   channel: {
     description: string;
