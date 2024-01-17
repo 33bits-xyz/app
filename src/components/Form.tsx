@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Anchor, Button, Checkbox, Hourglass, ProgressBar, TextInput } from "react95";
 import { get_public_key } from "../utils/keygen";
 import { Buffer } from "buffer"; 
@@ -39,6 +39,7 @@ export default function Form({
   const [proofGenerationWarningVisible, setProofGenerationWarningVisible] = useState<boolean>(true);
   const [selectChannelModalVisible, setSelectChannelModalVisible] = useState<boolean>(false);
   const [channel, setChannel] = useState<Channel | null>(null);
+  const [successMessage, setSuccessMessage] = useState<ReactNode>("");
 
   const cast = async (): Promise<any> => {
     setLoadingMessage('Fetching Farcaster FIDs tree...');
@@ -199,6 +200,27 @@ export default function Form({
                     setSuccess(true);
                     setMessage("");
                     setReplyLink("");
+
+                    if (channel !== null) {
+                      setSuccessMessage(
+                        <>
+                          Your cast was published successfully. View it on{" "}
+                          <Anchor target="_blank" href={`https://warpcast.com/~/channel/${channel.channel.id}`}>
+                            {channel.channel.name}
+                          </Anchor> channel.
+                        </>
+                      );
+                    } else {
+                      setSuccessMessage(
+                        <>
+                          Your cast was published successfully. View it on{" "}
+                          <Anchor target="_blank" href="https://warpcast.com/33bits">
+                            @33bits
+                          </Anchor>.
+                        </>
+                      );
+                    }
+                    
                     setChannel(null);
                   })
                   .catch((e) => {
@@ -247,7 +269,7 @@ export default function Form({
       {
         success === true &&
         (
-          <p>Your cast was published successfully. View it on <Anchor target="_blank" href="https://warpcast.com/33bits">@33bits</Anchor>.</p>
+          <p>{ successMessage }</p>
         )
       }
 
