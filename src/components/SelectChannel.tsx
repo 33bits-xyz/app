@@ -4,7 +4,6 @@ import { useDebounce, useDebouncedCallback } from 'use-debounce';
 import { Avatar, Button, ScrollView, Table, TableBody, TableDataCell, TableHead, TableHeadCell, TableRow, TextInput, Window, WindowContent, WindowHeader } from 'react95';
 import Loader from "./Loader";
 import axios from "axios";
-import { Channel } from "../types";
 
 
 export default function SelectChannel({
