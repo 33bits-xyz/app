@@ -10,7 +10,7 @@ export default function FAQ() {
             <br/>
             <p>
                 33bits is an experiment in using privacy as a tool to provoke conversations and uncover truths.
-                ZK prove that your Farcaster FID is ≤10001 and cast on {<Link33bits/>} feed without disclosing your account.
+                ZK prove that your Farcaster FID is ≤20001 and cast on {<Link33bits/>} feed without disclosing your account.
             </p>
 
             <Separator className="my-3" />
@@ -18,7 +18,7 @@ export default function FAQ() {
             <p>- Who can post on 33bits? </p>
             <br />
             <p>
-                Eligibility for posting on 33bits is exclusive to Farcaster accounts with FID ≤ 10001.
+                Eligibility for posting on 33bits is exclusive to Farcaster accounts with FID ≤ 20001.
             </p>
 
             <Separator className="my-3"/>
@@ -37,7 +37,7 @@ export default function FAQ() {
             <br />
             <p>
                 When a user signs in with Warpcast, the 33bits app links their FID with a new signer.
-                To post a cast, the user must prove that their FID is ≤ 10001 through zero-knowledge (zk) proofs.
+                To post a cast, the user must prove that their FID is ≤ 20001 through zero-knowledge (zk) proofs.
                 This proof is generated using the user's new signer.
                 The entire process, including authentication and proof generation, occurs in the user's browser, keeping their FID private.
                 Once the proof is created, it's verified on the app's backend.
@@ -50,7 +50,7 @@ export default function FAQ() {
             <br />
             <p>
                 Every cast on the {<Link33bits/>} feed is paired with a zero-knowledge (zk) proof.
-                Anyone can verify zk proofs to confirm that the cast was posted by an eligible author: they have a valid Farcaster account and their FID is ≤ 10001.
+                Anyone can verify zk proofs to confirm that the cast was posted by an eligible author: they have a valid Farcaster account and their FID is ≤ 20001.
                 This verification process is seamlessly conducted directly in your browser.
             </p>
 

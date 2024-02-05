@@ -36,7 +36,7 @@ fn main(
 
 
 // Returns the root of the tree from the provided leaf and its hashpath, using mimc hash
-fn compute_root_from_leaf(leaf : Field, index : Field, hash_path: [Field; 14]) -> Field {
+fn compute_root_from_leaf(leaf : Field, index : Field, hash_path: [Field; 16]) -> Field {
     let n = hash_path.len();
     let index_bits = index.to_le_bits(n as u32);
     let mut current = leaf;

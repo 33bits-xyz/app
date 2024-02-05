@@ -7,7 +7,7 @@ import './../styles/inputs.css';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
 
-import circuit from '../../circuits/v1/target/main.json';
+import circuit from '../../circuits/v2/target/main.json';
 
 import axios from "axios";
 import { stringToHexArray } from "../utils/string";
@@ -68,8 +68,8 @@ export default function Form({
       }
     } = await axios(`${import.meta.env.VITE_API_BASE_URL}/farcaster/whitelist`);
 
-    if (userFid > 10001 && !whitelist.includes(userFid)) {
-      throw new Error(`It appears that your FID (Farcaster ID) is greater than 10001. Unfortunately, the first version of 33bits is only accessible to accounts with an FID of 10001 or lower.`);
+    if (userFid > 20001 && !whitelist.includes(userFid)) {
+      throw new Error(`It appears that your FID (Farcaster ID) is greater than 20001. Unfortunately, the first version of 33bits is only accessible to accounts with an FID of 20001 or lower.`);
     }
 
     // @ts-ignore

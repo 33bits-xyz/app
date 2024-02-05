@@ -36,7 +36,7 @@ export default function ConnectWarpcaster({
       <Row>
         <Col>
           <p>
-            Hey! 33bits is currently exclusive to Farcaster accounts with FID ≤ 10001. Sign in with your Farcaster account to get started. Click on QR code or scan it with your mobile device.
+            Hey! 33bits is currently exclusive to Farcaster accounts with FID ≤ 20001. Sign in with your Farcaster account to get started. Click on QR code or scan it with your mobile device.
           </p>
         </Col>
       </Row>

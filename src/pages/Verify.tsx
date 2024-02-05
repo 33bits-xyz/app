@@ -11,6 +11,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import circuit_v0 from './../../circuits/v0/target/main.json';
 import circuit_v1 from './../../circuits/v1/target/main.json';
+import circuit_v2 from './../../circuits/v2/target/main.json';
 import Link33bits from "../components/Link_33bits";
 
 
@@ -53,7 +54,8 @@ export function Verify() {
   const verifyProof = async (message: Message): Promise<boolean> => {
     const versions = {
       0: circuit_v0,
-      1: circuit_v1
+      1: circuit_v1,
+      2: circuit_v2,
     };
 
     // @ts-ignore
