@@ -11,6 +11,7 @@ import circuit from '../../circuits/v2/target/main.json';
 
 import axios from "axios";
 import { stringToHexArray } from "../utils/string";
+import SelectChannel from "./SelectChannel";
 import { MAX_MESSAGE_LENGTH, sleep } from "../utils/common";
 
 
@@ -36,7 +37,8 @@ export default function Form({
   const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [proofGenerationWarningVisible, setProofGenerationWarningVisible] = useState<boolean>(true);
-  const [useAnoncast, setUseAnoncast] = useState<boolean>(false);
+  const [selectChannelModalVisible, setSelectChannelModalVisible] = useState<boolean>(false);
+  const [channel, setChannel] = useState<Channel | null>(null);
   const [successMessage, setSuccessMessage] = useState<ReactNode>("");
 
   const cast = async (): Promise<any> => {
@@ -113,21 +115,23 @@ export default function Form({
     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/farcaster/cast`, {  
       proof: Array.from(proof.proof),
       publicInputs: proof.publicInputs.map(i => Array.from(i)),
-      channel: null,
-      anoncast: useAnoncast,
+      channel: channel === null ? null : channel.channel.id,
     });
   };
 
   return (
     <>
-      {/* <Checkbox
-        checked={useAnoncast}
-        onChange={() => {
-          setUseAnoncast(!useAnoncast);
-        }}
-      >
-        Use Anoncast
-      </Checkbox> */}
+      <div style={{ display: selectChannelModalVisible ? 'block' : 'none' }}>
+        <SelectChannel
+          onClose={() => {
+            setSelectChannelModalVisible(false);
+          }}
+          onChoose={(channel) => {
+            setChannel(channel);
+            setSelectChannelModalVisible(false);
+          }}
+        />
+      </div>
 
       <div className="textarea-container mb-3">
         <TextInput
@@ -149,18 +153,6 @@ export default function Form({
       </div>
 
       {
-        mode === CastMode.Cast && (
-          <Checkbox
-            label="Use Anoncast"
-            checked={useAnoncast}
-            onChange={() => {
-              setUseAnoncast(!useAnoncast);
-            }}
-          />
-        )
-      }
-
-      {
         mode === CastMode.Reply && (
           <TextInput
             disabled={loading}
@@ -171,6 +163,20 @@ export default function Form({
             className="mb-3"
             placeholder="Paste the link to the cast"
           />
+        )
+      }
+
+      {
+        mode === CastMode.Cast && (
+          <Button onClick={() => {
+            if (channel === null) {
+              setSelectChannelModalVisible(true);
+            } else {
+              setChannel(null);
+            }
+          }}>
+            { channel === null ? 'Select channel' : `${channel.channel.name} ❌`}
+          </Button>
         )
       }
 
@@ -195,14 +201,27 @@ export default function Form({
                     setMessage("");
                     setReplyLink("");
 
-                    setSuccessMessage(
-                      <>
-                        Your cast was published successfully. View it on{" "}
-                        <Anchor target="_blank" href={useAnoncast ? "https://warpcast.com/anoncast" : "https://warpcast.com/33bits"}>
-                          {useAnoncast ? "anoncast" : "33bits"}
-                        </Anchor>.
-                      </>
-                    );
+                    if (channel !== null) {
+                      setSuccessMessage(
+                        <>
+                          Your cast was published successfully. View it on{" "}
+                          <Anchor target="_blank" href={`https://warpcast.com/~/channel/${channel.channel.id}`}>
+                            {channel.channel.name}
+                          </Anchor> channel.
+                        </>
+                      );
+                    } else {
+                      setSuccessMessage(
+                        <>
+                          Your cast was published successfully. View it on{" "}
+                          <Anchor target="_blank" href="https://warpcast.com/33bits">
+                            @33bits
+                          </Anchor>.
+                        </>
+                      );
+                    }
+                    
+                    setChannel(null);
                   })
                   .catch((e) => {
                     console.log(e);
