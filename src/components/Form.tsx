@@ -116,6 +116,25 @@ export default function Form({
       channel: null,
       anoncast: useAnoncast,
     });
+
+    const {
+      taskId
+    } = response.data;
+
+    // Poll /farcaster/task/{taskId} until each 10 seconds, during 5 minutes
+    for (let i = 0; i < 30; i++) {
+      const {
+        data: task
+      } = await axios(`${import.meta.env.VITE_API_BASE_URL}/farcaster/task/${taskId}`);
+
+      if (task !== null && task.status === 'success') {
+        return;
+      }
+
+      await sleep(10_000);
+    }
+
+    throw new Error('The task timed out. Please, try again.');
   };
 
   return (
@@ -151,7 +170,7 @@ export default function Form({
       {
         mode === CastMode.Cast && (
           <Checkbox
-            label="Use Anoncast"
+            label="Cast as anoncast"
             checked={useAnoncast}
             onChange={() => {
               setUseAnoncast(!useAnoncast);
