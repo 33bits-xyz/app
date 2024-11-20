@@ -134,20 +134,11 @@ export default function Form({
       await sleep(10_000);
     }
 
-    throw new Error('The task timed out. Please, try again.');
+    throw new Error(`The task timed out. Please, try again. Task ID: ${taskId}`);
   };
 
   return (
     <>
-      {/* <Checkbox
-        checked={useAnoncast}
-        onChange={() => {
-          setUseAnoncast(!useAnoncast);
-        }}
-      >
-        Use Anoncast
-      </Checkbox> */}
-
       <div className="textarea-container mb-3">
         <TextInput
           id="textArea"
@@ -171,6 +162,7 @@ export default function Form({
         mode === CastMode.Cast && (
           <Checkbox
             label="Cast as anoncast"
+            disabled={loading}
             checked={useAnoncast}
             onChange={() => {
               setUseAnoncast(!useAnoncast);
