@@ -160,14 +160,17 @@ export default function Form({
 
       {
         mode === CastMode.Cast && (
-          <Checkbox
-            label="Cast as anoncast"
-            disabled={loading}
-            checked={useAnoncast}
-            onChange={() => {
-              setUseAnoncast(!useAnoncast);
-            }}
-          />
+          <>
+            <Checkbox
+              label="Cast as anoncast (will be back soon)"
+              disabled={true}
+              // disabled={loading}
+              checked={useAnoncast}
+              onChange={() => {
+                setUseAnoncast(!useAnoncast);
+              }}
+            />          
+          </>
         )
       }
 
